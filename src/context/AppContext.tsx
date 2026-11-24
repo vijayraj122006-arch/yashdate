@@ -6,6 +6,8 @@ import type {
   MatchRecommendation,
   MatchStatus,
   ViewTab,
+  UserRole,
+  RolePermissions,
 } from '../types';
 import {
   INITIAL_DATER_PROFILE,
@@ -37,6 +39,12 @@ interface AppContextType {
   addToast: (message: string, type?: 'success' | 'info' | 'love') => void;
   removeToast: (id: string) => void;
   resetToDefault: () => void;
+  // RBAC
+  userRole: UserRole;
+  switchRole: (newRole: UserRole, pin?: string) => { success: boolean; message: string };
+  permissions: RolePermissions;
+  isRoleModalOpen: boolean;
+  setIsRoleModalOpen: (open: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -45,6 +53,12 @@ const STORAGE_KEYS = {
   PROFILE: 'yashdate_user_clean_v5',
   ENDORSEMENTS: 'yashdate_endorsements_clean_v5',
   RECOMMENDATIONS: 'yashdate_recommendations_clean_v5',
+  ROLE: 'yashdate_role_v5',
+};
+
+const ROLE_PINS = {
+  dater: '2026',
+  admin: '7777',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -84,6 +98,71 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [activeTab, setActiveTab] = useState<ViewTab>('profile');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [userRole, setUserRole] = useState<UserRole>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.ROLE);
+      if (saved === 'friend' || saved === 'dater' || saved === 'admin') {
+        return saved;
+      }
+      return 'friend';
+    } catch {
+      return 'friend';
+    }
+  });
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.ROLE, userRole);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [userRole]);
+
+  const permissions: RolePermissions = {
+    canEditBio: userRole === 'dater' || userRole === 'admin',
+    canViewMatches: userRole === 'dater' || userRole === 'admin',
+    canManageMatchStatus: userRole === 'dater' || userRole === 'admin',
+    canEditMatchNotes: userRole === 'dater' || userRole === 'admin',
+    canDeleteMatches: userRole === 'dater' || userRole === 'admin',
+    canDeleteVouches: userRole === 'dater' || userRole === 'admin',
+    canResetDatabase: userRole === 'admin',
+    canWriteVouch: userRole === 'friend' || userRole === 'admin',
+    canSendMatchLink: true,
+  };
+
+  const switchRole = (newRole: UserRole, pin?: string) => {
+    if (newRole === 'friend') {
+      setUserRole('friend');
+      if (activeTab === 'edit_profile' || activeTab === 'sent_matches') {
+        setActiveTab('profile');
+      }
+      addToast('Switched to Friend / Wingman view', 'info');
+      return { success: true, message: 'Switched to Friend view' };
+    }
+
+    if (newRole === 'dater') {
+      if (pin === ROLE_PINS.dater) {
+        setUserRole('dater');
+        addToast('Unlocked Yash (Dater) access', 'love');
+        return { success: true, message: 'Welcome back, Yash!' };
+      }
+      addToast('Incorrect PIN for Yash (hint: 2026)', 'info');
+      return { success: false, message: 'Incorrect PIN. Hint: 2026' };
+    }
+
+    if (newRole === 'admin') {
+      if (pin === ROLE_PINS.admin) {
+        setUserRole('admin');
+        addToast('Admin mode activated', 'success');
+        return { success: true, message: 'Admin mode unlocked' };
+      }
+      addToast('Incorrect Admin PIN (hint: 7777)', 'info');
+      return { success: false, message: 'Incorrect PIN. Hint: 7777' };
+    }
+
+    return { success: false, message: 'Unknown role' };
+  };
 
   useEffect(() => {
     try {
@@ -214,6 +293,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addToast,
         removeToast,
         resetToDefault,
+        userRole,
+        switchRole,
+        permissions,
+        isRoleModalOpen,
+        setIsRoleModalOpen,
       }}
     >
       {children}

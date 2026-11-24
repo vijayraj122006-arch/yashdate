@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModal }) => {
-  const { daterProfile, endorsements, setActiveTab, addToast, triggerConfetti } = useApp();
+  const { daterProfile, endorsements, setActiveTab, addToast, triggerConfetti, permissions, setIsRoleModalOpen } = useApp();
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
 
   const hasPhotos = daterProfile.photos && daterProfile.photos.length > 0;
@@ -110,11 +110,11 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
                 <p className="text-xs text-zinc-400 mt-0.5">Add photo links in the Edit Bio tab</p>
               </div>
               <button
-                onClick={() => setActiveTab('edit_profile')}
+                onClick={() => (permissions.canEditBio ? setActiveTab('edit_profile') : setIsRoleModalOpen(true))}
                 data-testid="add-photos-btn"
                 className="px-4 py-2 bg-[#1f1f2c] hover:bg-[#28283a] text-xs font-semibold text-zinc-200 border border-white/10 rounded-xl transition cursor-pointer"
               >
-                + Add Photos
+                {permissions.canEditBio ? '+ Add Photos' : 'Unlock Yash to Add Photos'}
               </button>
             </div>
           )}
@@ -213,13 +213,22 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
             ) : (
               <div className="bg-[#181824] p-4 rounded-2xl border border-white/5 flex items-center justify-between text-xs text-zinc-400">
                 <span>No bio description written yet.</span>
-                <button
-                  onClick={() => setActiveTab('edit_profile')}
-                  data-testid="write-description-btn"
-                  className="text-rose-400 hover:text-rose-300 font-semibold cursor-pointer transition"
-                >
-                  Write Description
-                </button>
+                {permissions.canEditBio ? (
+                  <button
+                    onClick={() => setActiveTab('edit_profile')}
+                    data-testid="write-description-btn"
+                    className="text-rose-400 hover:text-rose-300 font-semibold cursor-pointer transition"
+                  >
+                    Write Description
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsRoleModalOpen(true)}
+                    className="text-zinc-400 hover:text-zinc-200 text-[11px] underline cursor-pointer"
+                  >
+                    Unlock Yash to Write
+                  </button>
+                )}
               </div>
             )}
           </div>

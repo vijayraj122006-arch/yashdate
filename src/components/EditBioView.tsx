@@ -1,9 +1,33 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Edit3, Check } from 'lucide-react';
+import { Edit3, Check, Lock } from 'lucide-react';
 
 export const EditBioView: React.FC = () => {
-  const { daterProfile, updateDaterProfile } = useApp();
+  const { daterProfile, updateDaterProfile, permissions, setIsRoleModalOpen } = useApp();
+
+  if (!permissions.canEditBio) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-16 space-y-5 text-center">
+        <div className="w-16 h-16 rounded-3xl bg-rose-500/15 border border-rose-500/25 text-rose-300 flex items-center justify-center mx-auto shadow-lg shadow-rose-500/20">
+          <Lock className="w-7 h-7" />
+        </div>
+        <div className="space-y-1.5">
+          <h2 className="text-xl font-bold text-white">Profile Editing Locked</h2>
+          <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
+            Only Yash Sunil (Dater Mode) and the Administrator have permission to edit personal details, bio descriptions, and photos.
+          </p>
+        </div>
+        <div className="pt-2">
+          <button
+            onClick={() => setIsRoleModalOpen(true)}
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white text-xs font-semibold shadow-md shadow-rose-600/25 cursor-pointer"
+          >
+            Unlock Yash / Admin Access
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const [formData, setFormData] = useState({
     name: daterProfile.name,

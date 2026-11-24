@@ -1,6 +1,14 @@
 import { INITIAL_DATER_PROFILE } from '../data/initialData.ts';
 import { detectPlatform } from '../utils/platformHelper.ts';
-import type { DaterProfile, FriendEndorsement, MatchRecommendation, MatchStatus, ViewTab } from '../types/index.ts';
+import type {
+  DaterProfile,
+  FriendEndorsement,
+  MatchRecommendation,
+  MatchStatus,
+  ViewTab,
+  UserRole,
+  RolePermissions,
+} from '../types/index.ts';
 
 interface TestResult {
   name: string;
@@ -38,6 +46,47 @@ class TestableAppState {
   isSendLinkModalOpen = false;
   confettiTriggered = 0;
   clipboardText = '';
+  userRole: UserRole = 'friend';
+  isRoleModalOpen = false;
+
+  get permissions(): RolePermissions {
+    return {
+      canEditBio: this.userRole === 'dater' || this.userRole === 'admin',
+      canViewMatches: this.userRole === 'dater' || this.userRole === 'admin',
+      canManageMatchStatus: this.userRole === 'dater' || this.userRole === 'admin',
+      canEditMatchNotes: this.userRole === 'dater' || this.userRole === 'admin',
+      canDeleteMatches: this.userRole === 'dater' || this.userRole === 'admin',
+      canDeleteVouches: this.userRole === 'dater' || this.userRole === 'admin',
+      canResetDatabase: this.userRole === 'admin',
+      canWriteVouch: this.userRole === 'friend' || this.userRole === 'admin',
+      canSendMatchLink: true,
+    };
+  }
+
+  switchRole(newRole: UserRole, pin?: string): { success: boolean; message: string } {
+    if (newRole === 'friend') {
+      this.userRole = 'friend';
+      if (this.activeTab === 'edit_profile' || this.activeTab === 'sent_matches') {
+        this.activeTab = 'profile';
+      }
+      return { success: true, message: 'Switched to Friend view' };
+    }
+    if (newRole === 'dater') {
+      if (pin === '2026') {
+        this.userRole = 'dater';
+        return { success: true, message: 'Welcome back, Yash!' };
+      }
+      return { success: false, message: 'Incorrect PIN. Hint: 2026' };
+    }
+    if (newRole === 'admin') {
+      if (pin === '7777') {
+        this.userRole = 'admin';
+        return { success: true, message: 'Admin mode unlocked' };
+      }
+      return { success: false, message: 'Incorrect PIN. Hint: 7777' };
+    }
+    return { success: false, message: 'Unknown role' };
+  }
 
   // 1. Tab buttons in Navbar
   clickTab(tab: ViewTab) {
@@ -393,6 +442,69 @@ runTest('Button Test 11: Photo pagination buttons navigate cleanly', () => {
   assert(idx === 0, 'Next photo should wrap to 0');
   idx = app.prevPhoto(idx, total);
   assert(idx === 2, 'Prev photo should wrap to 2');
+});
+
+runTest('Button Test 12: Role Switching and PIN validation (Friend, Yash, Admin)', () => {
+  const app = new TestableAppState();
+  assert(app.userRole === 'friend', 'Default role must be friend');
+
+  // Attempt switching to dater with wrong PIN
+  const wrongDater = app.switchRole('dater', '0000');
+  assert(!wrongDater.success, 'Wrong PIN for dater must fail');
+  assert(app.userRole === 'friend', 'Role must remain friend');
+
+  // Switch to dater with correct PIN
+  const rightDater = app.switchRole('dater', '2026');
+  assert(rightDater.success, 'Correct PIN (2026) must unlock dater role');
+  assert(app.userRole === 'dater', 'Role must become dater');
+
+  // Attempt switching to admin with wrong PIN
+  const wrongAdmin = app.switchRole('admin', '1234');
+  assert(!wrongAdmin.success, 'Wrong PIN for admin must fail');
+  assert(app.userRole === 'dater', 'Role must remain dater');
+
+  // Switch to admin with correct PIN
+  const rightAdmin = app.switchRole('admin', '7777');
+  assert(rightAdmin.success, 'Correct PIN (7777) must unlock admin role');
+  assert(app.userRole === 'admin', 'Role must become admin');
+
+  // Switch back to friend without PIN
+  const backToFriend = app.switchRole('friend');
+  assert(backToFriend.success, 'Switching back to friend requires no PIN');
+  assert(app.userRole === 'friend', 'Role must become friend');
+});
+
+runTest('Button Test 13: RBAC permission gates correctly isolate Friend, Dater, and Admin capabilities', () => {
+  const app = new TestableAppState();
+
+  // 1. Friend Permissions
+  app.userRole = 'friend';
+  assert(app.permissions.canEditBio === false, 'Friend cannot edit bio');
+  assert(app.permissions.canViewMatches === false, 'Friend cannot view private matches');
+  assert(app.permissions.canManageMatchStatus === false, 'Friend cannot change match status');
+  assert(app.permissions.canDeleteVouches === false, 'Friend cannot delete other friends vouches');
+  assert(app.permissions.canResetDatabase === false, 'Friend cannot reset database');
+  assert(app.permissions.canWriteVouch === true, 'Friend can write vouch');
+  assert(app.permissions.canSendMatchLink === true, 'Friend can send match link');
+
+  // 2. Yash (Dater) Permissions
+  app.userRole = 'dater';
+  assert(app.permissions.canEditBio === true, 'Yash can edit bio');
+  assert(app.permissions.canViewMatches === true, 'Yash can view matches');
+  assert(app.permissions.canManageMatchStatus === true, 'Yash can manage match status');
+  assert(app.permissions.canEditMatchNotes === true, 'Yash can write private notes');
+  assert(app.permissions.canDeleteMatches === true, 'Yash can delete matches');
+  assert(app.permissions.canDeleteVouches === true, 'Yash can delete vouches');
+  assert(app.permissions.canResetDatabase === false, 'Dater cannot reset database');
+
+  // 3. Admin Permissions
+  app.userRole = 'admin';
+  assert(app.permissions.canEditBio === true, 'Admin can edit bio');
+  assert(app.permissions.canViewMatches === true, 'Admin can view matches');
+  assert(app.permissions.canManageMatchStatus === true, 'Admin can manage match status');
+  assert(app.permissions.canDeleteMatches === true, 'Admin can delete matches');
+  assert(app.permissions.canDeleteVouches === true, 'Admin can delete vouches');
+  assert(app.permissions.canResetDatabase === true, 'Admin can reset database');
 });
 
 console.log('\n--- BUTTON TEST SUMMARY ---');

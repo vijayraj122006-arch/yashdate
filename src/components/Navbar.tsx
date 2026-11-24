@@ -9,7 +9,18 @@ interface Props {
 }
 
 export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModal }) => {
-  const { activeTab, setActiveTab, daterProfile, endorsements, recommendations, addToast, resetToDefault } = useApp();
+  const {
+    activeTab,
+    setActiveTab,
+    daterProfile,
+    endorsements,
+    recommendations,
+    addToast,
+    resetToDefault,
+    userRole,
+    permissions,
+    setIsRoleModalOpen,
+  } = useApp();
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -19,8 +30,25 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
   const navTabs: { id: ViewTab; label: string; icon: React.ReactNode; badge?: number }[] = [
     { id: 'profile', label: 'Dating Card', icon: <User className="w-4 h-4" /> },
     { id: 'friends_vouches', label: 'Friend Vouches', icon: <Users className="w-4 h-4" />, badge: endorsements.length },
-    { id: 'sent_matches', label: 'Sent Matches', icon: <Compass className="w-4 h-4" />, badge: recommendations.length },
-    { id: 'edit_profile', label: 'Edit Bio', icon: <Edit3 className="w-4 h-4" /> },
+    ...(permissions.canViewMatches
+      ? [
+          {
+            id: 'sent_matches' as ViewTab,
+            label: userRole === 'dater' ? 'My Matches' : 'Sent Matches',
+            icon: <Compass className="w-4 h-4" />,
+            badge: recommendations.length,
+          },
+        ]
+      : []),
+    ...(permissions.canEditBio
+      ? [
+          {
+            id: 'edit_profile' as ViewTab,
+            label: 'Edit Bio',
+            icon: <Edit3 className="w-4 h-4" />,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -70,8 +98,35 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
             })}
           </nav>
 
-          {/* Quick Actions */}
+          {/* Quick Actions & Role Switcher */}
           <div className="flex items-center gap-2">
+            {/* Role Switcher Pill */}
+            <button
+              onClick={() => setIsRoleModalOpen(true)}
+              data-testid="role-switch-pill"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-[#15151e] border border-white/10 hover:border-white/20 transition cursor-pointer text-zinc-300 shadow-sm"
+              title="Click to switch role (Friend, Yash, Admin)"
+            >
+              {userRole === 'friend' && (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
+                  <span className="hidden sm:inline">Friend</span>
+                </>
+              )}
+              {userRole === 'dater' && (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-violet-400" />
+                  <span className="hidden sm:inline text-violet-300 font-bold">Yash</span>
+                </>
+              )}
+              {userRole === 'admin' && (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                  <span className="hidden sm:inline text-amber-300 font-bold">Admin</span>
+                </>
+              )}
+            </button>
+
             <button
               onClick={onOpenEndorseModal}
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-500/25 transition cursor-pointer shadow-sm shadow-rose-950"
@@ -96,13 +151,15 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
               <Share2 className="w-4 h-4" />
             </button>
 
-            <button
-              onClick={resetToDefault}
-              className="p-2 rounded-xl bg-[#15151e] hover:bg-[#1f1f2c] text-zinc-400 hover:text-zinc-200 border border-white/10 transition cursor-pointer"
-              title="Reset profile"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
+            {permissions.canResetDatabase && (
+              <button
+                onClick={resetToDefault}
+                className="p-2 rounded-xl bg-[#15151e] hover:bg-[#1f1f2c] text-amber-400 hover:text-amber-300 border border-amber-500/30 transition cursor-pointer"
+                title="Reset database (Admin only)"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>

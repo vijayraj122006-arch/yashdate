@@ -8,6 +8,7 @@ import { EditBioView } from './components/EditBioView';
 import { FriendEndorsementModal } from './components/FriendEndorsementModal';
 import { SendMatchLinkModal } from './components/SendMatchLinkModal';
 import { ToastContainer } from './components/ToastContainer';
+import { RoleModal } from './components/RoleModal';
 import { Heart } from 'lucide-react';
 
 const MainContent: React.FC = () => {
@@ -61,6 +62,7 @@ const MainContent: React.FC = () => {
       />
 
       <ToastContainer />
+      <RoleModal />
 
       {/* Clean Minimalist Footer */}
       <footer className="border-t border-white/5 bg-[#0b0b0f]/80 backdrop-blur-md py-6 px-4 sm:px-6">

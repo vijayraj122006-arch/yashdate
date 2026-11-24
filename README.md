@@ -39,6 +39,27 @@
 
 ---
 
+## Role-Based Access Control (RBAC)
+
+The app maintains strict role separation between friends, Yash Sunil, and administrators:
+
+| Capability | Friend / Wingman | Yash Sunil (Dater) | Administrator |
+|---|:---:|:---:|:---:|
+| **Access Requirement** | None (Default) | PIN: `2026` | PIN: `7777` |
+| **View Dating Card & Photos** | Yes | Yes | Yes |
+| **Write Friend Vouches** | Yes | Yes | Yes |
+| **Send Match Links (Instagram/LinkedIn)** | Yes | Yes | Yes |
+| **View Match Candidates Pipeline** | Confidential (Locked) | Yes | Yes |
+| **Update Match Interest Status** | No | Yes | Yes |
+| **Edit Private Dater Notes** | No | Yes | Yes |
+| **Edit Profile Bio & Photos** | Locked | Yes | Yes |
+| **Moderate / Delete Content** | No | Yes (His card) | Yes (All content) |
+| **Reset Database** | No | No | Yes |
+
+Switch roles anytime via the **Role Pill** in the top navigation bar.
+
+---
+
 ## Local Development & Build
 
 ```bash

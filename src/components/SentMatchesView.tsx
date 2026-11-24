@@ -1,16 +1,54 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import type { MatchStatus } from '../types';
-import { Compass, Plus, ExternalLink, Trash2, Check, User } from 'lucide-react';
+import { Compass, Plus, ExternalLink, Trash2, Check, User, Lock } from 'lucide-react';
 
 interface Props {
   onOpenSendLinkModal: () => void;
 }
 
 export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
-  const { recommendations, updateMatchStatus, updateMatchNotes, deleteRecommendation, daterProfile } = useApp();
+  const {
+    recommendations,
+    updateMatchStatus,
+    updateMatchNotes,
+    deleteRecommendation,
+    daterProfile,
+    permissions,
+    setIsRoleModalOpen,
+  } = useApp();
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+
+  if (!permissions.canViewMatches) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-16 space-y-5 text-center">
+        <div className="w-16 h-16 rounded-3xl bg-violet-500/15 border border-violet-500/25 text-violet-300 flex items-center justify-center mx-auto shadow-lg shadow-violet-500/20">
+          <Lock className="w-7 h-7" />
+        </div>
+        <div className="space-y-1.5">
+          <h2 className="text-xl font-bold text-white">Private Match Pipeline</h2>
+          <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
+            Candidate links, interest statuses, and personal notes are confidential to Yash Sunil and the Administrator.
+          </p>
+        </div>
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <button
+            onClick={onOpenSendLinkModal}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-semibold shadow-md shadow-sky-600/20 cursor-pointer"
+          >
+            + Send a Match Link for Yash
+          </button>
+          <button
+            onClick={() => setIsRoleModalOpen(true)}
+            className="px-4 py-2 rounded-xl bg-[#181824] hover:bg-[#222232] text-zinc-300 border border-white/10 text-xs font-medium cursor-pointer"
+          >
+            Unlock Yash / Admin
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleStartEditNote = (id: string, currentNote?: string) => {
     setEditingNoteId(id);

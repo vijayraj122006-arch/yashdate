@@ -46,4 +46,18 @@ export interface DaterProfile {
   socialLinks: SocialLink[];
 }
 
+export type UserRole = 'friend' | 'dater' | 'admin';
+
+export interface RolePermissions {
+  canEditBio: boolean;
+  canViewMatches: boolean;
+  canManageMatchStatus: boolean;
+  canEditMatchNotes: boolean;
+  canDeleteMatches: boolean;
+  canDeleteVouches: boolean;
+  canResetDatabase: boolean;
+  canWriteVouch: boolean;
+  canSendMatchLink: boolean;
+}
+
 export type ViewTab = 'profile' | 'friends_vouches' | 'sent_matches' | 'edit_profile';

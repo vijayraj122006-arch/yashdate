@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const FriendVouchesView: React.FC<Props> = ({ onOpenEndorseModal }) => {
-  const { endorsements, deleteEndorsement, daterProfile } = useApp();
+  const { endorsements, deleteEndorsement, daterProfile, permissions } = useApp();
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
@@ -74,14 +74,16 @@ export const FriendVouchesView: React.FC<Props> = ({ onOpenEndorseModal }) => {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => deleteEndorsement(e.id)}
-                  data-testid={`delete-vouch-${e.id}`}
-                  className="p-1.5 text-zinc-500 hover:text-rose-400 transition cursor-pointer"
-                  title="Remove vouch"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {permissions.canDeleteVouches && (
+                  <button
+                    onClick={() => deleteEndorsement(e.id)}
+                    data-testid={`delete-vouch-${e.id}`}
+                    className="p-1.5 text-zinc-500 hover:text-rose-400 transition cursor-pointer"
+                    title="Remove vouch"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed italic pl-3 border-l-2 border-rose-500/50">
