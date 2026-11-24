@@ -10,9 +10,11 @@ interface Props {
 }
 
 export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { daterProfile, addRecommendation } = useApp();
+  const { daterProfile, addRecommendation, session } = useApp();
 
-  const [friendName, setFriendName] = useState('');
+  const [friendName, setFriendName] = useState(
+    session?.role === 'friend' && session.username !== 'friend' ? session.username : ''
+  );
   const [candidateName, setCandidateName] = useState('');
   const [candidateHandle, setCandidateHandle] = useState('');
   const [profileLink, setProfileLink] = useState('');

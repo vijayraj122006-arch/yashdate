@@ -8,9 +8,11 @@ interface Props {
 }
 
 export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { daterProfile, addEndorsement } = useApp();
+  const { daterProfile, addEndorsement, session } = useApp();
 
-  const [friendName, setFriendName] = useState('');
+  const [friendName, setFriendName] = useState(
+    session?.role === 'friend' && session.username !== 'friend' ? session.username : ''
+  );
   const [relationship, setRelationship] = useState('Close Friend');
   const [yearsKnown, setYearsKnown] = useState(3);
   const [description, setDescription] = useState('');

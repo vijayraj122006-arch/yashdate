@@ -48,6 +48,11 @@ export interface DaterProfile {
 
 export type UserRole = 'friend' | 'dater' | 'admin';
 
+export interface UserSession {
+  role: UserRole;
+  username: string;
+}
+
 export interface RolePermissions {
   canEditBio: boolean;
   canViewMatches: boolean;

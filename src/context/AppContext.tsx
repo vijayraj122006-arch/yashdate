@@ -8,6 +8,7 @@ import type {
   ViewTab,
   UserRole,
   RolePermissions,
+  UserSession,
 } from '../types';
 import {
   INITIAL_DATER_PROFILE,
@@ -39,7 +40,10 @@ interface AppContextType {
   addToast: (message: string, type?: 'success' | 'info' | 'love') => void;
   removeToast: (id: string) => void;
   resetToDefault: () => void;
-  // RBAC
+  // RBAC & Auth
+  session: UserSession | null;
+  login: (role: UserRole, username: string, password: string) => { success: boolean; message: string };
+  logout: () => void;
   userRole: UserRole;
   switchRole: (newRole: UserRole, pin?: string) => { success: boolean; message: string };
   permissions: RolePermissions;
@@ -54,6 +58,7 @@ const STORAGE_KEYS = {
   ENDORSEMENTS: 'yashdate_endorsements_clean_v5',
   RECOMMENDATIONS: 'yashdate_recommendations_clean_v5',
   ROLE: 'yashdate_role_v5',
+  SESSION: 'yashdate_session_v5',
 };
 
 const ROLE_PINS = {
@@ -96,28 +101,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
-  const [activeTab, setActiveTab] = useState<ViewTab>('profile');
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
-  const [userRole, setUserRole] = useState<UserRole>(() => {
+  const [session, setSession] = useState<UserSession | null>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEYS.ROLE);
-      if (saved === 'friend' || saved === 'dater' || saved === 'admin') {
-        return saved;
-      }
-      return 'friend';
+      const saved = localStorage.getItem(STORAGE_KEYS.SESSION);
+      return saved ? JSON.parse(saved) : null;
     } catch {
-      return 'friend';
+      return null;
     }
   });
+
+  const [activeTab, setActiveTab] = useState<ViewTab>('profile');
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEYS.ROLE, userRole);
+      if (session) {
+        localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.SESSION);
+      }
     } catch (e) {
       console.error(e);
     }
-  }, [userRole]);
+  }, [session]);
+
+  const userRole: UserRole = session ? session.role : 'friend';
 
   const permissions: RolePermissions = {
     canEditBio: userRole === 'dater' || userRole === 'admin',
@@ -131,9 +140,64 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     canSendMatchLink: true,
   };
 
+  const login = (role: UserRole, username: string, password: string) => {
+    const cleanUser = username.trim();
+    const lowerUser = cleanUser.toLowerCase();
+    const cleanPass = password.trim();
+
+    if (!cleanUser) {
+      return { success: false, message: 'Username / ID is required' };
+    }
+
+    if (role === 'dater') {
+      if (lowerUser !== 'yash' && lowerUser !== 'yashsunil') {
+        return { success: false, message: 'Invalid username for Yash (use "yash")' };
+      }
+      if (cleanPass !== ROLE_PINS.dater) {
+        return { success: false, message: 'Invalid passcode for Yash (hint: 2026)' };
+      }
+      const newSession: UserSession = { role: 'dater', username: 'yash' };
+      setSession(newSession);
+      addToast('Welcome back, Yash!', 'love');
+      return { success: true, message: 'Welcome back, Yash!' };
+    }
+
+    if (role === 'admin') {
+      if (lowerUser !== 'admin') {
+        return { success: false, message: 'Invalid username for Admin (use "admin")' };
+      }
+      if (cleanPass !== ROLE_PINS.admin) {
+        return { success: false, message: 'Invalid admin passcode (hint: 7777)' };
+      }
+      const newSession: UserSession = { role: 'admin', username: 'admin' };
+      setSession(newSession);
+      addToast('Administrator authenticated', 'success');
+      return { success: true, message: 'Admin access unlocked' };
+    }
+
+    if (role === 'friend') {
+      if (cleanPass !== 'friend' && cleanPass !== 'friend123' && cleanPass !== '1234') {
+        return { success: false, message: 'Friend passcode is "friend"' };
+      }
+      const newSession: UserSession = { role: 'friend', username: cleanUser };
+      setSession(newSession);
+      addToast(`Welcome ${cleanUser}! You are in Friend & Wingman mode.`, 'love');
+      return { success: true, message: `Welcome ${cleanUser}!` };
+    }
+
+    return { success: false, message: 'Unknown role' };
+  };
+
+  const logout = () => {
+    setSession(null);
+    setActiveTab('profile');
+    addToast('Signed out', 'info');
+  };
+
   const switchRole = (newRole: UserRole, pin?: string) => {
     if (newRole === 'friend') {
-      setUserRole('friend');
+      const friendUsername = session?.role === 'friend' ? session.username : 'friend';
+      setSession({ role: 'friend', username: friendUsername });
       if (activeTab === 'edit_profile' || activeTab === 'sent_matches') {
         setActiveTab('profile');
       }
@@ -143,7 +207,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (newRole === 'dater') {
       if (pin === ROLE_PINS.dater) {
-        setUserRole('dater');
+        setSession({ role: 'dater', username: 'yash' });
         addToast('Unlocked Yash (Dater) access', 'love');
         return { success: true, message: 'Welcome back, Yash!' };
       }
@@ -153,7 +217,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (newRole === 'admin') {
       if (pin === ROLE_PINS.admin) {
-        setUserRole('admin');
+        setSession({ role: 'admin', username: 'admin' });
         addToast('Admin mode activated', 'success');
         return { success: true, message: 'Admin mode unlocked' };
       }
@@ -293,6 +357,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addToast,
         removeToast,
         resetToDefault,
+        session,
+        login,
+        logout,
         userRole,
         switchRole,
         permissions,

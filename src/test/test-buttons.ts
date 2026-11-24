@@ -8,6 +8,7 @@ import type {
   ViewTab,
   UserRole,
   RolePermissions,
+  UserSession,
 } from '../types/index.ts';
 
 interface TestResult {
@@ -47,7 +48,44 @@ class TestableAppState {
   confettiTriggered = 0;
   clipboardText = '';
   userRole: UserRole = 'friend';
+  session: UserSession | null = null;
   isRoleModalOpen = false;
+
+  login(role: UserRole, username: string, password: string): { success: boolean; message: string } {
+    const cleanUser = username.trim().toLowerCase();
+    const cleanPass = password.trim();
+    if (!cleanUser) return { success: false, message: 'Username is required' };
+
+    if (role === 'dater') {
+      if (cleanUser !== 'yash' && cleanUser !== 'yashsunil') return { success: false, message: 'Invalid username' };
+      if (cleanPass !== '2026') return { success: false, message: 'Invalid passcode' };
+      this.session = { role: 'dater', username: 'yash' };
+      this.userRole = 'dater';
+      return { success: true, message: 'Welcome back, Yash!' };
+    }
+    if (role === 'admin') {
+      if (cleanUser !== 'admin') return { success: false, message: 'Invalid username' };
+      if (cleanPass !== '7777') return { success: false, message: 'Invalid passcode' };
+      this.session = { role: 'admin', username: 'admin' };
+      this.userRole = 'admin';
+      return { success: true, message: 'Admin access granted' };
+    }
+    if (role === 'friend') {
+      if (cleanPass !== 'friend' && cleanPass !== 'friend123' && cleanPass !== '1234') {
+        return { success: false, message: 'Invalid passcode' };
+      }
+      this.session = { role: 'friend', username: username.trim() };
+      this.userRole = 'friend';
+      return { success: true, message: 'Welcome to YashDate!' };
+    }
+    return { success: false, message: 'Unknown role' };
+  }
+
+  logout() {
+    this.session = null;
+    this.userRole = 'friend';
+    this.activeTab = 'profile';
+  }
 
   get permissions(): RolePermissions {
     return {
@@ -504,6 +542,49 @@ runTest('Button Test 13: RBAC permission gates correctly isolate Friend, Dater, 
   assert(app.permissions.canManageMatchStatus === true, 'Admin can manage match status');
   assert(app.permissions.canDeleteMatches === true, 'Admin can delete matches');
   assert(app.permissions.canDeleteVouches === true, 'Admin can delete vouches');
+  assert(app.permissions.canResetDatabase === true, 'Admin can reset database');
+});
+
+runTest('Button Test 14: Auth Opening Screen authentication with Role, ID/Username, and Passcode', () => {
+  const app = new TestableAppState();
+  assert(app.session === null, 'Initially session must be null (shows opening auth)');
+
+  // 1. Friend login
+  const failFriendPass = app.login('friend', 'Ashwin', 'wrongpass');
+  assert(!failFriendPass.success, 'Friend login with wrong pass must fail');
+  assert(app.session === null, 'Session remains null');
+
+  const okFriend = app.login('friend', 'Ashwin', 'friend');
+  assert(okFriend.success, 'Friend login with correct pass succeeds');
+  assert(app.session !== null && app.session.username === 'Ashwin', 'Session saved with username');
+  assert(app.userRole === 'friend', 'Role set to friend');
+
+  app.logout();
+  assert(app.session === null, 'Logout resets session to null');
+
+  // 2. Yash Dater login
+  const failYashUser = app.login('dater', 'otherguy', '2026');
+  assert(!failYashUser.success, 'Yash login with non-yash username must fail');
+
+  const failYashPass = app.login('dater', 'yash', '9999');
+  assert(!failYashPass.success, 'Yash login with wrong pass must fail');
+
+  const okYash = app.login('dater', 'yash', '2026');
+  assert(okYash.success, 'Yash login with username yash and pin 2026 succeeds');
+  assert(app.session?.username === 'yash', 'Yash session active');
+  assert(app.userRole === 'dater', 'Role set to dater');
+  assert(app.permissions.canEditBio === true, 'Yash has bio edit permission');
+
+  app.logout();
+
+  // 3. Admin login
+  const failAdmin = app.login('admin', 'admin', 'wrong');
+  assert(!failAdmin.success, 'Admin with wrong pass must fail');
+
+  const okAdmin = app.login('admin', 'admin', '7777');
+  assert(okAdmin.success, 'Admin login with username admin and pin 7777 succeeds');
+  assert(app.session?.username === 'admin', 'Admin session active');
+  assert(app.userRole === 'admin', 'Role set to admin');
   assert(app.permissions.canResetDatabase === true, 'Admin can reset database');
 });
 

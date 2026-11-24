@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import type { ViewTab } from '../types';
-import { Heart, User, Users, Compass, Edit3, Share2, RotateCcw } from 'lucide-react';
+import { Heart, User, Users, Compass, Edit3, Share2, RotateCcw, LogOut } from 'lucide-react';
 
 interface Props {
   onOpenEndorseModal: () => void;
@@ -20,6 +20,8 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
     userRole,
     permissions,
     setIsRoleModalOpen,
+    session,
+    logout,
   } = useApp();
 
   const handleShare = () => {
@@ -110,13 +112,15 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
               {userRole === 'friend' && (
                 <>
                   <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
-                  <span className="hidden sm:inline">Friend</span>
+                  <span className="hidden sm:inline">
+                    {session?.username ? `${session.username} (Friend)` : 'Friend'}
+                  </span>
                 </>
               )}
               {userRole === 'dater' && (
                 <>
                   <span className="w-2 h-2 rounded-full bg-violet-400" />
-                  <span className="hidden sm:inline text-violet-300 font-bold">Yash</span>
+                  <span className="hidden sm:inline text-violet-300 font-bold">Yash (Dater)</span>
                 </>
               )}
               {userRole === 'admin' && (
@@ -160,6 +164,14 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
                 <RotateCcw className="w-4 h-4" />
               </button>
             )}
+
+            <button
+              onClick={logout}
+              className="p-2 rounded-xl bg-[#15151e] hover:bg-[#1f1f2c] text-zinc-400 hover:text-rose-400 border border-white/10 transition cursor-pointer"
+              title="Sign Out / Switch Account"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>

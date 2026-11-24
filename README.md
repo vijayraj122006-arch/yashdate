@@ -39,7 +39,19 @@
 
 ---
 
-## Role-Based Access Control (RBAC)
+## Opening Auth Screen & Credentials
+
+When opening the app, users authenticate through the opening gate with their **Role**, **Username / ID**, and **Passcode**:
+
+| Role | Username / ID | Passcode | Permissions & Description |
+|---|---|---|---|
+| **Friend / Wingman** | Any Name (e.g. `Pooja`, `Ashwin`, or `friend`) | `friend` | Browse Yash's profile, write vouches, and send candidate links from Instagram / LinkedIn. |
+| **Yash Sunil (Dater)** | `yash` | `2026` | Review incoming matches, track status (Interested / Passed), write private notes, and edit bio / photos. |
+| **Administrator** | `admin` | `7777` | Full administrative oversight, vouch / match moderation, and database reset controls. |
+
+*A 1-tap quick fill button is available directly on the opening auth screen for instant testing.*
+
+---
 
 The app maintains strict role separation between friends, Yash Sunil, and administrators:
 

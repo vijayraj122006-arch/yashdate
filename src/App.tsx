@@ -9,6 +9,7 @@ import { FriendEndorsementModal } from './components/FriendEndorsementModal';
 import { SendMatchLinkModal } from './components/SendMatchLinkModal';
 import { ToastContainer } from './components/ToastContainer';
 import { RoleModal } from './components/RoleModal';
+import { AuthOpeningScreen } from './components/AuthOpeningScreen';
 import { Heart } from 'lucide-react';
 
 const MainContent: React.FC = () => {
@@ -90,10 +91,25 @@ const MainContent: React.FC = () => {
   );
 };
 
+const AppRouter: React.FC = () => {
+  const { session } = useApp();
+
+  if (!session) {
+    return (
+      <>
+        <AuthOpeningScreen />
+        <ToastContainer />
+      </>
+    );
+  }
+
+  return <MainContent />;
+};
+
 export function App() {
   return (
     <AppProvider>
-      <MainContent />
+      <AppRouter />
     </AppProvider>
   );
 }
