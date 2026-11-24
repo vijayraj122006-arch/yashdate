@@ -3,14 +3,14 @@ export type PlatformType = 'instagram' | 'linkedin' | 'twitter' | 'github' | 'ti
 export type MatchStatus = 'to_review' | 'interested' | 'contacted' | 'date_scheduled' | 'passed';
 
 export type DatingAppMode =
-  | 'fusion'       // Ultimate mashup
-  | 'tinder'       // Swipe deck with Super Like, Boost, Rewind
-  | 'hinge'        // Prompt-driven vertical cards & voice memo
-  | 'bumble'       // Honey yellow theme, compliments & first move
-  | 'okcupid'      // 98% Compatibility gauge & deep questions
-  | 'shaadi'       // TrulyMadly Trust Score & Kundali/Horoscope vibe
-  | 'raya'         // Ultra-sleek VIP dark mode with profile music track
-  | 'happn';       // Crossed paths radar & proximity map
+  | 'fusion'       // All-in-one minimal fusion
+  | 'tinder'       // Swipe deck with clean action controls
+  | 'hinge'        // Clean editorial prompt cards & voice memos
+  | 'bumble'       // Honey minimal theme & compliments
+  | 'okcupid'      // Compatibility gauge & questionnaire
+  | 'shaadi'       // Biodata & trust score
+  | 'raya'         // Dark VIP aesthetic with profile soundtrack
+  | 'happn';       // Proximity radar & crossed paths
 
 export interface SocialLink {
   platform: PlatformType;
@@ -38,13 +38,13 @@ export interface FriendEndorsement {
   friendName: string;
   friendHandle?: string;
   friendAvatar?: string;
-  relationship: string; // e.g. "Best friend since college", "Roommate for 3 years"
+  relationship: string;
   yearsKnown: number;
-  description: string; // The friend's heartfelt / funny description of the dater
+  description: string;
   whyYouShouldDateThem: string;
   greenFlags: string[];
   quirkOrRoast: string;
-  ratingScore: number; // e.g., 10 for 10/10
+  ratingScore: number;
   isFeatured: boolean;
   isApproved: boolean;
   createdAt: string;
@@ -59,8 +59,8 @@ export interface MatchRecommendation {
   candidateHandle?: string;
   profileLink: string;
   platform: PlatformType;
-  pitchNote: string; // "Why I think you two would vibe"
-  categoryTag?: string; // e.g., "Software Engineer", "Bookworm", "Music Lover"
+  pitchNote: string;
+  categoryTag?: string;
   status: MatchStatus;
   daterPrivateNotes?: string;
   createdAt: string;
@@ -74,14 +74,21 @@ export interface IndianMatchmakingDetails {
   smoking: string;
   sunSign: string;
   gotraOrCommunity?: string;
-  kundaliGunas: number; // e.g. 33 out of 36
-  trulyMadlyTrustScore: number; // e.g. 98%
+  kundaliGunas: number;
+  trulyMadlyTrustScore: number;
   familyType: string;
 }
 
 export interface PersonalityDimension {
   trait: string;
-  score: number; // 0 to 100
+  score: number;
+}
+
+export interface InterestBadge {
+  id: string;
+  label: string;
+  imageUrl: string;
+  category: string;
 }
 
 export interface DaterProfile {
@@ -89,38 +96,37 @@ export interface DaterProfile {
   name: string;
   age: number;
   pronouns: string;
-  location: string;
-  distanceKm: number; // Happn / Tinder
-  crossedPathsCount: number; // Happn
-  crossedPathsLocation: string; // Happn
+  height: string; // e.g. "6'0\" (183 cm)"
+  location: string; // e.g. "Chennai, India"
+  roots: string; // e.g. "Malayali / Mallu"
+  dreamCareer: string; // e.g. "Commercial Aviation Pilot"
+  musicTaste: string; // e.g. "Anuv Jain, Acoustic Indie, Prateek Kuhad"
+  datingPreference: string; // e.g. "Short girls who appreciate humor, airport dates & good hugs"
+  distanceKm: number;
+  crossedPathsCount: number;
+  crossedPathsLocation: string;
   occupation: string;
   companyOrCollege: string;
   headline: string;
   avatarUrl: string;
   photos: string[];
-  // Raya Music Soundtrack
   soundtrack: {
     title: string;
     artist: string;
     previewUrl?: string;
-    isPlaying?: boolean;
   };
-  // Dater's descriptions
   selfDescription: string;
   idealDate: string;
   whatImLookingFor: string;
   hobbies: string[];
+  interestBadges: InterestBadge[];
   myGreenFlags: string[];
   hotTakeOrQuirk: string;
-  // Hinge Prompts
   prompts: HingePrompt[];
-  // OkCupid & eharmony
-  compatibilityScore: number; // e.g. 97
+  compatibilityScore: number;
   compatibilityQuestions: CompatibilityQuestion[];
   personalityDimensions: PersonalityDimension[];
-  // Indian Matchmaking (Shaadi / TrulyMadly / Aisle)
   matchmakingDetails: IndianMatchmakingDetails;
-  // Socials
   socialLinks: SocialLink[];
   stats: {
     datesCompleted: number;

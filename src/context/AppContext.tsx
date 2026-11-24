@@ -45,15 +45,17 @@ interface AppContextType {
   handleLikePrompt: (promptId: string) => void;
   isPlayingMusic: boolean;
   toggleMusic: () => void;
+  exportConfig: () => void;
+  importConfig: (jsonString: string) => boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PROFILE: 'yashsunil_profile_v2',
-  ENDORSEMENTS: 'yashsunil_endorsements_v2',
-  RECOMMENDATIONS: 'yashsunil_recommendations_v2',
-  APP_MODE: 'yashsunil_app_mode_v2',
+  PROFILE: 'yashsunil_profile_v3',
+  ENDORSEMENTS: 'yashsunil_endorsements_v3',
+  RECOMMENDATIONS: 'yashsunil_recommendations_v3',
+  APP_MODE: 'yashsunil_app_mode_v3',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -143,17 +145,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const triggerConfetti = () => {
     confetti({
-      particleCount: 80,
-      spread: 75,
+      particleCount: 70,
+      spread: 70,
       origin: { y: 0.6 },
-      colors: ['#f43f5e', '#ec4899', '#f59e0b', '#8b5cf6', '#10b981', '#06b6d4'],
+      colors: ['#0284c7', '#38bdf8', '#fb7185', '#f43f5e', '#e0e7ff'],
     });
   };
 
   const toggleMusic = () => {
     setIsPlayingMusic((prev) => {
       const next = !prev;
-      addToast(next ? `🎵 Playing: ${daterProfile.soundtrack.title} by ${daterProfile.soundtrack.artist}` : 'Audio paused', 'info');
+      addToast(
+        next
+          ? `Playing acoustic track: ${daterProfile.soundtrack.title} by ${daterProfile.soundtrack.artist}`
+          : 'Soundtrack paused',
+        'info'
+      );
       return next;
     });
   };
@@ -167,7 +174,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       },
     }));
     triggerConfetti();
-    addToast(`⭐ You Super Liked ${daterProfile.name}! It's a match!`, 'love');
+    addToast(`You sent a Super Like to ${daterProfile.name}! It is a match!`, 'love');
   };
 
   const handleLikePrompt = (promptId: string) => {
@@ -178,7 +185,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ),
     }));
     triggerConfetti();
-    addToast(`❤️ Sent a like & comment on ${daterProfile.name}'s prompt!`, 'love');
+    addToast(`Sent a like on ${daterProfile.name}'s prompt!`, 'love');
   };
 
   const updateDaterProfile = (updates: Partial<DaterProfile>) => {
@@ -186,7 +193,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       ...updates,
     }));
-    addToast('Profile & description updated! ✨', 'success');
+    addToast('Profile and preferences updated successfully', 'success');
   };
 
   const addEndorsement = (newEndorsement: Omit<FriendEndorsement, 'id' | 'createdAt'>) => {
@@ -204,7 +211,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       },
     }));
     triggerConfetti();
-    addToast(`Friend endorsement from ${newEndorsement.friendName} added! ❤️`, 'love');
+    addToast(`Friend endorsement from ${newEndorsement.friendName} added`, 'love');
   };
 
   const toggleFeatureEndorsement = (id: string) => {
@@ -235,14 +242,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       },
     }));
     triggerConfetti();
-    addToast(`Match recommendation sent to ${daterProfile.name}! 🚀`, 'success');
+    addToast(`Match recommendation sent to ${daterProfile.name}`, 'success');
   };
 
   const updateMatchStatus = (id: string, status: MatchStatus) => {
     setRecommendations((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status } : r))
     );
-    addToast('Match pipeline status updated!', 'info');
+    addToast('Candidate status updated', 'info');
   };
 
   const updateMatchNotes = (id: string, notes: string) => {
@@ -256,6 +263,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addToast('Recommendation removed', 'info');
   };
 
+  const exportConfig = () => {
+    const data = {
+      profile: daterProfile,
+      endorsements,
+      recommendations,
+      appMode: datingAppMode,
+    };
+    const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 2))}`;
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', jsonString);
+    downloadAnchor.setAttribute('download', `${daterProfile.name.toLowerCase().replace(/\s+/g, '_')}_profile.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    addToast('Profile configuration exported to JSON file', 'success');
+  };
+
+  const importConfig = (jsonString: string): boolean => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      if (parsed.profile) setDaterProfile(parsed.profile);
+      if (Array.isArray(parsed.endorsements)) setEndorsements(parsed.endorsements);
+      if (Array.isArray(parsed.recommendations)) setRecommendations(parsed.recommendations);
+      if (parsed.appMode) setDatingAppMode(parsed.appMode);
+      addToast('Profile configuration imported successfully', 'success');
+      return true;
+    } catch {
+      addToast('Failed to parse JSON configuration file', 'info');
+      return false;
+    }
+  };
+
   const resetToDefault = () => {
     setDaterProfile(INITIAL_DATER_PROFILE);
     setEndorsements(INITIAL_ENDORSEMENTS);
@@ -265,7 +304,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem(STORAGE_KEYS.ENDORSEMENTS);
     localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS);
     localStorage.removeItem(STORAGE_KEYS.APP_MODE);
-    addToast('Reset to default Yash Sunil (age 20) data! 🔄', 'info');
+    addToast('Reset to default profile state', 'info');
   };
 
   return (
@@ -295,6 +334,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         handleLikePrompt,
         isPlayingMusic,
         toggleMusic,
+        exportConfig,
+        importConfig,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { SUGGESTED_GREEN_FLAGS } from '../data/initialData';
-import { X, Heart, Sparkles, Star, Plus } from 'lucide-react';
+import { X, Heart, Star, Plus } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -13,13 +13,14 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
 
   const [friendName, setFriendName] = useState('');
   const [friendHandle, setFriendHandle] = useState('');
-  const [relationship, setRelationship] = useState('Best friend');
+  const [relationship, setRelationship] = useState('Close Friend');
   const [yearsKnown, setYearsKnown] = useState(3);
   const [description, setDescription] = useState('');
   const [whyYouShouldDateThem, setWhyYouShouldDateThem] = useState('');
   const [selectedGreenFlags, setSelectedGreenFlags] = useState<string[]>([
-    'Active & Attentive Listener 👂',
-    'Great Cook 🍳',
+    'Certified 6ft height',
+    'Aspiring Commercial Pilot',
+    'Anuv Jain acoustic guitar player',
   ]);
   const [customFlag, setCustomFlag] = useState('');
   const [quirkOrRoast, setQuirkOrRoast] = useState('');
@@ -57,17 +58,16 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
       description: description.trim(),
       whyYouShouldDateThem:
         whyYouShouldDateThem.trim() ||
-        `${daterProfile.name} is one of the kindest and most reliable people you will ever meet!`,
+        `${daterProfile.name} is one of the kindest, tallest, and most dependable people you will ever meet.`,
       greenFlags: selectedGreenFlags,
       quirkOrRoast:
-        quirkOrRoast.trim() || 'Warning: May accidentally steal your heart and your snacks.',
+        quirkOrRoast.trim() || 'Warning: May accidentally steal your attention with acoustic songs.',
       ratingScore: Number(ratingScore) || 10,
       isFeatured: true,
       isApproved: true,
     });
 
     onClose();
-    // Reset form
     setDescription('');
     setWhyYouShouldDateThem('');
     setQuirkOrRoast('');
@@ -75,33 +75,32 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl p-6 sm:p-8 text-slate-100 my-8">
+      <div className="relative w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 text-slate-100 my-8">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/60 hover:bg-slate-800 transition"
+          className="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 bg-gradient-to-tr from-rose-500 to-pink-500 rounded-xl text-white shadow-lg shadow-rose-500/20">
-            <Heart className="w-6 h-6 fill-white" />
+          <div className="p-2.5 bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/30">
+            <Heart className="w-5 h-5 fill-rose-500" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-              Vouch & Describe {daterProfile.name}
+            <h2 className="text-xl font-bold tracking-tight text-white">
+              Vouch for {daterProfile.name}
             </h2>
-            <p className="text-sm text-slate-400">
-              Your honest, heartwarming or funny testimonial will be featured on {daterProfile.name}'s dating profile!
+            <p className="text-xs text-slate-400">
+              Your honest testimonial will be featured on {daterProfile.name}'s dating profile.
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-          {/* Friend details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
                 Your Name *
               </label>
               <input
@@ -109,39 +108,39 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
                 required
                 value={friendName}
                 onChange={(e) => setFriendName(e.target.value)}
-                placeholder="e.g. Alex Rivera"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-500 text-sm outline-none transition"
+                placeholder="e.g. Ashwin Nair"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
                 Your Handle / Social (optional)
               </label>
               <input
                 type="text"
                 value={friendHandle}
                 onChange={(e) => setFriendHandle(e.target.value)}
-                placeholder="e.g. @alex_rivera"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-500 text-sm outline-none transition"
+                placeholder="e.g. @ashwin_nair"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                How Do You Know {daterProfile.name}?
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                Relationship
               </label>
               <input
                 type="text"
                 value={relationship}
                 onChange={(e) => setRelationship(e.target.value)}
-                placeholder="e.g. College Roommate, Best Friend, Coworker"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-500 text-sm outline-none transition"
+                placeholder="e.g. Flight Academy Roommate, Childhood Friend"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
                 Years Known
               </label>
               <input
@@ -150,51 +149,44 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
                 step="0.5"
                 value={yearsKnown}
                 onChange={(e) => setYearsKnown(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white text-sm outline-none transition"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
               />
             </div>
           </div>
 
-          {/* Description */}
           <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Describe {daterProfile.name} in Your Own Words *
-              </label>
-              <span className="text-xs text-rose-400 font-medium flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" /> What makes them special?
-              </span>
-            </div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              Describe {daterProfile.name} in Your Own Words *
+            </label>
             <textarea
               required
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={`Share what ${daterProfile.name} is really like behind the scenes. Are they thoughtful, hilarious, loyal, great in a crisis, or an amazing cook?`}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-500 text-sm outline-none transition resize-none"
+              placeholder={`Share what ${daterProfile.name} is really like behind the scenes. His pilot dreams, humor, kindness, or cooking skills?`}
+              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs leading-relaxed outline-none focus:border-rose-500 resize-none"
             />
           </div>
 
-          {/* Why date them */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
               Why Should Someone Date Them?
             </label>
             <input
               type="text"
               value={whyYouShouldDateThem}
               onChange={(e) => setWhyYouShouldDateThem(e.target.value)}
-              placeholder="e.g. He will remember your favorite coffee order and never leave you on read."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-500 text-sm outline-none transition"
+              placeholder="e.g. He is 6ft, plays acoustic songs, and will always make sure you are safe."
+              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
             />
           </div>
 
           {/* Green Flags */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Select Their Certified Green Flags ({selectedGreenFlags.length} selected)
+              Select Verified Green Flags
             </label>
-            <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto pr-1">
+            <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
               {SUGGESTED_GREEN_FLAGS.map((flag) => {
                 const isSelected = selectedGreenFlags.includes(flag);
                 return (
@@ -202,10 +194,10 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
                     type="button"
                     key={flag}
                     onClick={() => toggleFlag(flag)}
-                    className={`text-xs px-3 py-1.5 rounded-full border transition cursor-pointer flex items-center gap-1.5 ${
+                    className={`text-[11px] px-2.5 py-1 rounded-md border transition cursor-pointer flex items-center gap-1 ${
                       isSelected
-                        ? 'bg-rose-500/20 border-rose-500 text-rose-300 font-semibold shadow-sm'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:border-slate-500'
+                        ? 'bg-rose-500/20 border-rose-500 text-rose-300 font-medium'
+                        : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-600'
                     }`}
                   >
                     {isSelected && <Star className="w-3 h-3 fill-rose-400 text-rose-400" />}
@@ -219,38 +211,37 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
                 type="text"
                 value={customFlag}
                 onChange={(e) => setCustomFlag(e.target.value)}
-                placeholder="Add custom green flag (e.g. Sings in Italian)..."
+                placeholder="Add custom green flag..."
                 className="flex-1 px-3 py-1.5 text-xs rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 outline-none"
               />
               <button
                 type="button"
                 onClick={handleAddCustomFlag}
-                className="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-lg flex items-center gap-1"
+                className="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg flex items-center gap-1 cursor-pointer"
               >
-                <Plus className="w-3.5 h-3.5" /> Add
+                <Plus className="w-3 h-3" /> Add
               </button>
             </div>
           </div>
 
-          {/* Friendly Roast */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-              Friendly Roast / Cute Quirk (Optional)
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              Playful Quirk / Funny Habit
             </label>
             <input
               type="text"
               value={quirkOrRoast}
               onChange={(e) => setQuirkOrRoast(e.target.value)}
-              placeholder="e.g. Will spend 20 minutes explaining how mechanical keyboards work."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-500 text-sm outline-none transition"
+              placeholder="e.g. Will explain flight cockpit dials during romantic golden hour."
+              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
             />
           </div>
 
           {/* Vouch Rating */}
-          <div className="flex items-center justify-between p-3.5 bg-slate-800/50 rounded-xl border border-slate-700/60">
+          <div className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
             <div>
-              <p className="text-xs font-semibold uppercase text-slate-400">Wingman Vouch Score</p>
-              <p className="text-sm text-slate-300 font-medium">How strongly do you vouch for them?</p>
+              <p className="text-xs font-semibold uppercase text-slate-400">Wingman Score</p>
+              <p className="text-xs text-slate-300">How strongly do you vouch for him?</p>
             </div>
             <div className="flex items-center gap-2">
               {[10, 11].map((val) => (
@@ -258,32 +249,31 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
                   type="button"
                   key={val}
                   onClick={() => setRatingScore(val)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition ${
+                  className={`px-3 py-1 rounded-lg text-xs font-bold border transition ${
                     ratingScore === val
-                      ? 'bg-rose-500 text-white border-rose-400 shadow-md shadow-rose-500/30'
-                      : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-slate-500'
+                      ? 'bg-rose-600 text-white border-rose-500 shadow-sm'
+                      : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-600'
                   }`}
                 >
-                  {val}/10 ⭐
+                  {val}/10
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Submit */}
-          <div className="pt-2 flex justify-end gap-3">
+          <div className="pt-2 flex justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition"
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white text-sm font-semibold shadow-lg shadow-rose-500/25 transition flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition cursor-pointer"
             >
-              <Heart className="w-4 h-4 fill-white" /> Post Friend Vouch
+              <Heart className="w-3.5 h-3.5 fill-white" /> Post Vouch
             </button>
           </div>
         </form>

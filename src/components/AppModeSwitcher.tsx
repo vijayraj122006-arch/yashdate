@@ -15,95 +15,73 @@ import {
 export const AppModeSwitcher: React.FC = () => {
   const { datingAppMode, setDatingAppMode, addToast } = useApp();
 
-  const modes: { id: DatingAppMode; label: string; icon: React.ReactNode; desc: string; badge: string; color: string }[] = [
+  const modes: { id: DatingAppMode; label: string; icon: React.ReactNode; badge: string }[] = [
     {
       id: 'fusion',
-      label: 'Super-App Fusion',
-      icon: <Sparkles className="w-4 h-4" />,
-      desc: 'All 15+ dating apps combined into one ultimate experience',
-      badge: 'Ultimate',
-      color: 'from-rose-500 to-indigo-600',
+      label: 'Editorial Fusion',
+      icon: <Sparkles className="w-3.5 h-3.5" />,
+      badge: 'All-in-One',
     },
     {
       id: 'tinder',
-      label: 'Tinder Swipe Deck',
-      icon: <Flame className="w-4 h-4 text-rose-500" />,
-      desc: 'Quick connections, card stack, Super Likes & Boost',
-      badge: 'Swipe Deck',
-      color: 'from-rose-500 to-orange-500',
+      label: 'Tinder Deck',
+      icon: <Flame className="w-3.5 h-3.5 text-rose-400" />,
+      badge: 'Swipe Cards',
     },
     {
       id: 'hinge',
       label: 'Hinge Prompts',
-      icon: <MessageCircle className="w-4 h-4 text-emerald-400" />,
-      desc: 'Designed to be deleted, prompt cards & voice memos',
-      badge: 'Prompts',
-      color: 'from-emerald-500 to-teal-700',
+      icon: <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />,
+      badge: 'Editorial Prompts',
     },
     {
       id: 'bumble',
       label: 'Bumble First Move',
-      icon: <Heart className="w-4 h-4 text-amber-400 fill-amber-400" />,
-      desc: 'Honey-yellow theme, compliments & BFF mode',
-      badge: 'Bumble Honey',
-      color: 'from-amber-500 to-yellow-600',
+      icon: <Heart className="w-3.5 h-3.5 text-amber-400" />,
+      badge: 'Honey Minimal',
     },
     {
       id: 'okcupid',
       label: 'OkCupid & eharmony',
-      icon: <Scale className="w-4 h-4 text-blue-400" />,
-      desc: '97% Match score, deep questions & 29-dimension spectrum',
-      badge: '97% Match',
-      color: 'from-blue-600 to-cyan-500',
+      icon: <Scale className="w-3.5 h-3.5 text-sky-400" />,
+      badge: '98% Compatibility',
     },
     {
       id: 'shaadi',
       label: 'Shaadi & TrulyMadly',
-      icon: <Crown className="w-4 h-4 text-amber-300" />,
-      desc: 'TrulyMadly Trust Score 99%, Kundali 34/36, Biodata',
-      badge: 'Indian Matchmaking',
-      color: 'from-rose-600 via-amber-600 to-red-700',
+      icon: <Crown className="w-3.5 h-3.5 text-amber-300" />,
+      badge: 'Biodata & Trust',
     },
     {
       id: 'raya',
       label: 'Raya VIP & Feeld',
-      icon: <Sparkles className="w-4 h-4 text-purple-400" />,
-      desc: 'Elite dark aesthetic with curated audio soundtrack',
-      badge: 'VIP Club',
-      color: 'from-purple-900 to-slate-900',
+      icon: <Sparkles className="w-3.5 h-3.5 text-purple-400" />,
+      badge: 'VIP Soundtrack',
     },
     {
       id: 'happn',
-      label: 'Happn & CMB Radar',
-      icon: <Compass className="w-4 h-4 text-cyan-400" />,
-      desc: 'Crossed paths in real life & Bagel of the Day',
-      badge: 'Crossed Paths',
-      color: 'from-cyan-600 to-blue-700',
+      label: 'Happn & CMB',
+      icon: <Compass className="w-3.5 h-3.5 text-cyan-400" />,
+      badge: 'Radar & Proximity',
     },
   ];
 
   return (
-    <div className="bg-slate-900/95 border-b border-slate-800 py-3 px-4 sm:px-6 shadow-md backdrop-blur-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+    <div className="bg-slate-950/80 border-b border-slate-800/80 py-2.5 px-4 sm:px-6 shadow-sm backdrop-blur-md">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <span className="p-1.5 rounded-lg bg-gradient-to-r from-rose-500 to-indigo-600 text-white shadow-sm">
-            <Radio className="w-4 h-4 animate-pulse" />
+          <span className="p-1 rounded-md bg-slate-800 text-slate-300">
+            <Radio className="w-3.5 h-3.5 text-sky-400" />
           </span>
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <span>UX App Mode:</span>
-              <span className="text-rose-400">
-                {modes.find((m) => m.id === datingAppMode)?.label}
-              </span>
-            </h3>
-            <p className="text-[11px] text-slate-500 hidden sm:block">
-              Switch UI/UX aesthetic between Tinder, Bumble, Hinge, OkCupid, Shaadi, Raya & Happn
-            </p>
-          </div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Design Aesthetic:
+          </span>
+          <span className="text-xs font-bold text-slate-200">
+            {modes.find((m) => m.id === datingAppMode)?.label}
+          </span>
         </div>
 
-        {/* Mode selector pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
           {modes.map((mode) => {
             const isSelected = datingAppMode === mode.id;
             return (
@@ -111,14 +89,13 @@ export const AppModeSwitcher: React.FC = () => {
                 key={mode.id}
                 onClick={() => {
                   setDatingAppMode(mode.id);
-                  addToast(`Switched to ${mode.label} UI/UX! ✨`, 'info');
+                  addToast(`Switched view to ${mode.label}`, 'info');
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer border ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer border ${
                   isSelected
-                    ? `bg-gradient-to-r ${mode.color} text-white border-white/20 shadow-lg scale-105`
-                    : 'bg-slate-800/80 text-slate-400 border-slate-700/80 hover:text-slate-200 hover:border-slate-600'
+                    ? 'bg-slate-800 text-white border-slate-600 shadow-sm'
+                    : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
                 }`}
-                title={mode.desc}
               >
                 {mode.icon}
                 <span>{mode.badge}</span>
