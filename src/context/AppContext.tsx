@@ -42,9 +42,9 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PROFILE: 'yashdate_profile_clean',
-  ENDORSEMENTS: 'yashdate_endorsements_clean',
-  RECOMMENDATIONS: 'yashdate_recommendations_clean',
+  PROFILE: 'yashdate_user_clean_v4',
+  ENDORSEMENTS: 'yashdate_endorsements_clean_v4',
+  RECOMMENDATIONS: 'yashdate_recommendations_clean_v4',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -139,12 +139,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setEndorsements((prev) => [item, ...prev]);
     triggerConfetti();
-    addToast(`Friend vouch from ${newEndorsement.friendName} posted`, 'love');
+    addToast(`Friend description from ${newEndorsement.friendName} posted`, 'love');
   };
 
   const deleteEndorsement = (id: string) => {
     setEndorsements((prev) => prev.filter((e) => e.id !== id));
-    addToast('Endorsement removed', 'info');
+    addToast('Description removed', 'info');
   };
 
   const addRecommendation = (newRec: Omit<MatchRecommendation, 'id' | 'createdAt' | 'status'>) => {
@@ -184,7 +184,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem(STORAGE_KEYS.PROFILE);
     localStorage.removeItem(STORAGE_KEYS.ENDORSEMENTS);
     localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS);
-    addToast('Reset to default profile', 'info');
+    addToast('Reset to clean profile', 'info');
   };
 
   return (

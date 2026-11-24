@@ -11,7 +11,7 @@
 
 ---
 
-## 🌟 The Core Experience
+## The Core Experience
 
 1. **Dating Card (Prospective Match View)**:
    - Clean, spacious photo card with smooth pagination.
@@ -38,7 +38,7 @@
 
 ---
 
-## 💻 Local Development & Build
+## Local Development & Build
 
 ```bash
 # Clone the repository
@@ -57,6 +57,6 @@ npm run build
 
 ---
 
-## 📄 License
+## License
 
 MIT. Clean, focused, and crafted for Yash Sunil.

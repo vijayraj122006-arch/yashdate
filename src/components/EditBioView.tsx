@@ -11,35 +11,47 @@ export const EditBioView: React.FC = () => {
     height: daterProfile.height,
     location: daterProfile.location,
     roots: daterProfile.roots,
-    occupation: daterProfile.occupation,
+    personality: daterProfile.personality,
     dreamCareer: daterProfile.dreamCareer,
     musicTaste: daterProfile.musicTaste,
     datingPreference: daterProfile.datingPreference,
-    headline: daterProfile.headline,
     selfDescription: daterProfile.selfDescription,
     idealDate: daterProfile.idealDate,
     photo1: daterProfile.photos[0] || '',
     photo2: daterProfile.photos[1] || '',
     photo3: daterProfile.photos[2] || '',
+    instagramUrl: daterProfile.socialLinks.find((l) => l.platform === 'instagram')?.url || '',
+    linkedinUrl: daterProfile.socialLinks.find((l) => l.platform === 'linkedin')?.url || '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const photos = [formData.photo1, formData.photo2, formData.photo3].filter(Boolean);
+    const photos = [formData.photo1, formData.photo2, formData.photo3]
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    const socialLinks = [];
+    if (formData.instagramUrl.trim()) {
+      socialLinks.push({ platform: 'instagram' as const, url: formData.instagramUrl.trim() });
+    }
+    if (formData.linkedinUrl.trim()) {
+      socialLinks.push({ platform: 'linkedin' as const, url: formData.linkedinUrl.trim() });
+    }
+
     updateDaterProfile({
       name: formData.name.trim(),
       age: Number(formData.age) || 20,
       height: formData.height.trim(),
       location: formData.location.trim(),
       roots: formData.roots.trim(),
-      occupation: formData.occupation.trim(),
+      personality: formData.personality.trim(),
       dreamCareer: formData.dreamCareer.trim(),
       musicTaste: formData.musicTaste.trim(),
       datingPreference: formData.datingPreference.trim(),
-      headline: formData.headline.trim(),
       selfDescription: formData.selfDescription.trim(),
       idealDate: formData.idealDate.trim(),
-      photos: photos.length > 0 ? photos : daterProfile.photos,
+      photos,
+      socialLinks,
     });
   };
 
@@ -52,7 +64,7 @@ export const EditBioView: React.FC = () => {
             Edit Profile & Bio
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Update your personal details, descriptions, and photo links.
+            Manage your personal description, photos, and preferences.
           </p>
         </div>
       </div>
@@ -101,7 +113,7 @@ export const EditBioView: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-              Location / City
+              Location
             </label>
             <input
               type="text"
@@ -123,11 +135,11 @@ export const EditBioView: React.FC = () => {
           </div>
         </div>
 
-        {/* Career & Dating Preference */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Career, Personality & Dating Preference */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-              Dream Career / Ambition
+              Dream Career
             </label>
             <input
               type="text"
@@ -138,7 +150,18 @@ export const EditBioView: React.FC = () => {
           </div>
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-              Dating Preference / Type
+              Personality / Vibe
+            </label>
+            <input
+              type="text"
+              value={formData.personality}
+              onChange={(e) => setFormData({ ...formData, personality: e.target.value })}
+              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              Dating Preference
             </label>
             <input
               type="text"
@@ -149,42 +172,29 @@ export const EditBioView: React.FC = () => {
           </div>
         </div>
 
-        {/* Music Taste & Headline */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-              Music Taste
-            </label>
-            <input
-              type="text"
-              value={formData.musicTaste}
-              onChange={(e) => setFormData({ ...formData, musicTaste: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-              Headline
-            </label>
-            <input
-              type="text"
-              value={formData.headline}
-              onChange={(e) => setFormData({ ...formData, headline: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
-            />
-          </div>
-        </div>
-
-        {/* Self Description */}
+        {/* Music Taste */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-            Self Description ("About Me")
+            Music Taste
+          </label>
+          <input
+            type="text"
+            value={formData.musicTaste}
+            onChange={(e) => setFormData({ ...formData, musicTaste: e.target.value })}
+            className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+          />
+        </div>
+
+        {/* Self-Description */}
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            Put Your Description ("About Me")
           </label>
           <textarea
-            required
             rows={4}
             value={formData.selfDescription}
             onChange={(e) => setFormData({ ...formData, selfDescription: e.target.value })}
+            placeholder="Write your description here..."
             className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs leading-relaxed outline-none focus:border-emerald-500"
           />
         </div>
@@ -192,12 +202,13 @@ export const EditBioView: React.FC = () => {
         {/* Ideal Date */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-            Ideal Date Idea
+            Ideal Date
           </label>
           <textarea
             rows={2}
             value={formData.idealDate}
             onChange={(e) => setFormData({ ...formData, idealDate: e.target.value })}
+            placeholder="Describe your ideal date idea..."
             className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs leading-relaxed outline-none focus:border-emerald-500"
           />
         </div>
@@ -218,16 +229,44 @@ export const EditBioView: React.FC = () => {
             type="url"
             value={formData.photo2}
             onChange={(e) => setFormData({ ...formData, photo2: e.target.value })}
-            placeholder="Second Photo URL"
+            placeholder="Second Photo URL (optional)"
             className="w-full px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500 font-mono text-[11px]"
           />
           <input
             type="url"
             value={formData.photo3}
             onChange={(e) => setFormData({ ...formData, photo3: e.target.value })}
-            placeholder="Third Photo URL"
+            placeholder="Third Photo URL (optional)"
             className="w-full px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500 font-mono text-[11px]"
           />
+        </div>
+
+        {/* Social Links */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              Instagram Profile URL
+            </label>
+            <input
+              type="url"
+              value={formData.instagramUrl}
+              onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+              placeholder="https://instagram.com/yourhandle"
+              className="w-full px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              LinkedIn Profile URL
+            </label>
+            <input
+              type="url"
+              value={formData.linkedinUrl}
+              onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
+              placeholder="https://linkedin.com/in/yourhandle"
+              className="w-full px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+            />
+          </div>
         </div>
 
         <div className="pt-3 flex justify-end">

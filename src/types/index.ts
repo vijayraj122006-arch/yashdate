@@ -11,9 +11,9 @@ export interface FriendEndorsement {
   id: string;
   friendName: string;
   relationship: string;
-  yearsKnown: number;
+  yearsKnown?: number;
   description: string;
-  whyYouShouldDateThem: string;
+  whyYouShouldDateThem?: string;
   createdAt: string;
 }
 
@@ -36,11 +36,10 @@ export interface DaterProfile {
   height: string;
   location: string;
   roots: string;
-  occupation: string;
+  personality: string;
   dreamCareer: string;
   musicTaste: string;
   datingPreference: string;
-  headline: string;
   selfDescription: string;
   idealDate: string;
   photos: string[];
