@@ -404,7 +404,7 @@ runTest('Button Test 8: Send Match Link button validates, detects platform, and 
 
   // Submit Instagram link
   const igSuccess = app.submitSendLink({
-    friendName: 'Pooja',
+    friendName: 'FriendUser',
     candidateName: 'Meera',
     candidateHandle: '@meera_art',
     profileLink: 'https://instagram.com/meera_art',
@@ -432,7 +432,7 @@ runTest('Button Test 8: Send Match Link button validates, detects platform, and 
 runTest('Button Test 9: Match Status dropdown and Notes buttons update status and notes', () => {
   const app = new TestableAppState();
   app.submitSendLink({
-    friendName: 'Pooja',
+    friendName: 'FriendUser',
     candidateName: 'Meera',
     profileLink: 'https://instagram.com/meera_art',
     pitchNote: 'Great vibe',
@@ -550,13 +550,13 @@ runTest('Button Test 14: Auth Opening Screen authentication with Role, ID/Userna
   assert(app.session === null, 'Initially session must be null (shows opening auth)');
 
   // 1. Friend login
-  const failFriendPass = app.login('friend', 'Ashwin', 'wrongpass');
+  const failFriendPass = app.login('friend', 'FriendUser', 'wrongpass');
   assert(!failFriendPass.success, 'Friend login with wrong pass must fail');
   assert(app.session === null, 'Session remains null');
 
-  const okFriend = app.login('friend', 'Ashwin', 'friend');
+  const okFriend = app.login('friend', 'FriendUser', 'friend');
   assert(okFriend.success, 'Friend login with correct pass succeeds');
-  assert(app.session !== null && app.session.username === 'Ashwin', 'Session saved with username');
+  assert(app.session !== null && app.session.username === 'FriendUser', 'Session saved with username');
   assert(app.userRole === 'friend', 'Role set to friend');
 
   app.logout();

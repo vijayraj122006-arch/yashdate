@@ -74,7 +74,7 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
                 data-testid="vouch-input-name"
                 value={friendName}
                 onChange={(e) => setFriendName(e.target.value)}
-                placeholder="e.g. Rahul"
+                placeholder="Your name"
                 className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 transition"
               />
             </div>

@@ -88,7 +88,7 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
               data-testid="match-input-friend"
               value={friendName}
               onChange={(e) => setFriendName(e.target.value)}
-              placeholder="e.g. Pooja"
+              placeholder="Your name"
               className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500 transition"
             />
           </div>
@@ -119,7 +119,7 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 data-testid="match-input-candidate"
                 value={candidateName}
                 onChange={(e) => setCandidateName(e.target.value)}
-                placeholder="e.g. Diya"
+                placeholder="Candidate's name"
                 className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500 transition"
               />
             </div>

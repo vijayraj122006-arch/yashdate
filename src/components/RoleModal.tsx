@@ -30,10 +30,6 @@ export const RoleModal: React.FC = () => {
     }
   };
 
-  const handleQuickFill = (pin: string) => {
-    setPinInput(pin);
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
       <div className="relative w-full max-w-md bg-[#13131c] border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-7 text-zinc-100 my-8 text-left">
@@ -146,26 +142,17 @@ export const RoleModal: React.FC = () => {
           {/* PIN Input if Dater or Admin */}
           {(selectedRole === 'dater' || selectedRole === 'admin') && (
             <div className="p-3.5 rounded-2xl bg-[#181824] border border-white/10 space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                  <KeyRound className="w-3.5 h-3.5 text-rose-400" />
-                  Enter Passcode for {selectedRole === 'dater' ? 'Yash' : 'Admin'}
-                </label>
-                <button
-                  type="button"
-                  onClick={() => handleQuickFill(selectedRole === 'dater' ? '2026' : '7777')}
-                  className="text-[10px] text-rose-400 hover:text-rose-300 font-mono underline cursor-pointer"
-                >
-                  Quick Fill ({selectedRole === 'dater' ? '2026' : '7777'})
-                </button>
-              </div>
+              <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                <KeyRound className="w-3.5 h-3.5 text-rose-400" />
+                Enter Passcode for {selectedRole === 'dater' ? 'Yash' : 'Admin'}
+              </label>
 
               <input
                 type="password"
                 required
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
-                placeholder={selectedRole === 'dater' ? 'Enter Yash PIN (2026)' : 'Enter Admin PIN (7777)'}
+                placeholder="••••••••"
                 className="w-full px-3 py-2 rounded-xl bg-[#13131c] border border-white/10 text-white text-xs outline-none focus:border-rose-500 font-mono tracking-widest"
               />
 
