@@ -4,6 +4,7 @@
 > Built for **Yash Sunil** (20, 6'0", Mallu from Chennai, aspiring pilot, likes short girls, Anuv Jain fan) with zero hardcoded values.
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-yashdate-rose.svg)](https://github.com/vijayraj122006-arch/yashdate)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvijayraj122006-arch%2Fyashdate)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19.x-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)](https://www.typescriptlang.org/)
@@ -53,6 +54,26 @@ npm run dev
 
 # Production build
 npm run build
+```
+
+---
+
+## Deploy to Vercel
+
+The app is fully configured for Vercel deployment with `vercel.json` routing and caching headers.
+
+### Option 1: Import via Vercel Dashboard (Recommended)
+1. Go to [vercel.com/new](https://vercel.com/new).
+2. Connect your GitHub account and import `vijayraj122006-arch/yashdate`.
+3. Vercel will automatically detect:
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Click **Deploy**. Your dating app will be live with a free `.vercel.app` domain and automatic SSL!
+
+### Option 2: Deploy via Vercel CLI
+```bash
+npx vercel
 ```
 
 ---
