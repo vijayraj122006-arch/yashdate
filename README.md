@@ -1,7 +1,7 @@
-# YashDate ❤️ — Friend-Vouched Dating Web App
+# YashDate ❤️ — Multi-App Dating Super-App
 
-> **Where dating meets honest friend endorsements and community wingmen.**  
-> Built for the dater who wants genuine connections backed by the people who know them best.
+> **A fusion of Tinder, Bumble, Hinge, OkCupid, Shaadi, TrulyMadly, Raya, Happn, and more — backed by real friend endorsements & community wingmen.**  
+> Dedicated to **Yash Sunil (age 20)** with 100% dynamic, unhardcoded customization.
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-yashdate-rose.svg)](https://github.com/vijayraj122006-arch/yashdate)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)](https://vitejs.dev/)
@@ -11,117 +11,71 @@
 
 ---
 
-## 🌟 Concept & Vision
+## 🌟 The Dating App Fusion Matrix
 
-Traditional dating apps are plagued by superficial swiping, fabricated bios, and zero accountability. **YashDate** fixes modern dating through **community social proof and friend-powered matchmaking**:
+YashDate combines the signature UI & UX patterns of the world's most iconic dating and matchmaking apps:
 
-1. **The Person Who Wants to Date (Dater Cockpit)**:
-   - Sets up their own profile and detailed **self-descriptions** (About Me, What I'm Looking For, Ideal First Date, Certified Green Flags, Quirks & Passions).
-   - Receives **descriptions & vouches from their real-life friends** (roommates, best friends, coworkers).
-   - Pins the best friend testimonials directly onto their public dating card.
-   - Receives **scouted candidate profile links** sent by friends from **LinkedIn, Instagram, X/Twitter, and web profiles** directly inside the app!
-   - Tracks incoming leads through an interactive dating pipeline (*To Review*, *Interested 😍*, *DMed / Reached Out 💬*, *Date Scheduled ☕*, *Passed 🙈*) with private notes.
-
-2. **The Friends / Wingmen (Wingman Hub)**:
-   - **Vouch & Describe**: Friends write authentic, hilarious, or heartwarming testimonials about the dater, choose certified green flags, add friendly roasts, and rate them (10/10 or 11/10).
-   - **Scout & Send Match Links**: When friends see someone cute or interesting on Instagram, LinkedIn, or Twitter, they paste their link directly into the app with a pitch note explaining why they'd vibe!
-
-3. **Prospective Dates (Public Date View)**:
-   - Anyone receiving the profile link sees not just what the dater says about themselves, but **what their friends say about them**!
-   - Instant trust and high emotional safety through verified social proof.
-   - Direct links to connect via Instagram, LinkedIn, or message.
+| App Inspiration | Signature UI / UX Feature Built Into YashDate |
+| :--- | :--- |
+| **Tinder** | Swipe deck, Rewind (↩️), Nope (✕), Super Like (⭐), Like (💚), Boost (⚡) |
+| **Bumble** | Honey-yellow theme, "Women & Wingmen make the first move", Bumble BFF/Date toggle, Direct Compliments |
+| **Hinge** | "Designed to be deleted" prompt cards (*"Together we could...", "My friends' favorite story..."*), individual prompt ❤️ likes, voice memos (0:32) |
+| **OkCupid & eharmony** | **97% Compatibility Match** gauge, question matchups, and 29-dimension personality spectrum bars |
+| **Shaadi, Jeevansathi & TrulyMadly** | **TrulyMadly Trust Score 99%**, **34/36 Kundali Gunas Match**, biodata quick specs (Height 5'11", Diet: Vegetarian, Sun sign: Sagittarius, Mother Tongue: Hindi/English) |
+| **Happn** | Crossed Paths radar banner (*"Crossed paths 4x near Blue Tokai & Indiranagar, 1.2 km away"*) |
+| **Coffee Meets Bagel (CMB)** | Curated Daily Bagel of the Day, countdown timer (*"18h left to connect"*), coffee bean currency |
+| **Raya & Feeld** | VIP aesthetic, dark luxury styling, **interactive profile soundtrack player** (*Passionfruit by Drake*) with audio equalizer |
+| **Facebook Dating & POF** | "Secret Crush" toggle with live crush count, mutual friend wingmen graph, conversation icebreakers |
+| **Grindr, Scruff & Taimi** | Quick emoji reaction dock (🔥, 👋, ☕, 🍕, 💻), distance tracker |
 
 ---
 
-## 🚀 Key Features
+## 👤 Unhardcoded Dynamic Profile: Yash Sunil (Age 20)
 
-- **💖 Dater Self-Description Studio**: Live-editable bio, ideal date ideas, relationship goals, lifestyle tags, and social profiles.
-- **🤝 Friend Endorsement System**: Multi-field vouch forms with green flag tag selectors, years known, relationship tags, and celebratory confetti upon submission.
-- **🔗 In-App Match Link Scout**: Friends drop links from LinkedIn, Instagram, TikTok, Twitter/X, and websites with automatic platform detection and custom pitch notes.
-- **📊 Match Pipeline & Private Notes**: The dater can manage prospective dates with status flags, private follow-up notes, and direct external profile links.
-- **👀 Glassmorphism Public Dating Card**: Multi-photo carousel, interactive friend quote highlights, green flags checklist, and direct social links.
-- **💾 LocalStorage Persistence**: All changes, friend submissions, and match links persist automatically in browser storage.
-- **🔄 Demo Reset & Export**: Quickly reset to the default rich demo data (featuring Yash and his friends) anytime.
+Every single field across the app is **100% dynamic and live-editable** in the **Dater Cockpit**:
+- **Name**: Yash Sunil
+- **Age**: 20
+- **Occupation & College**: CS & AI Undergrad • Full-Stack Builder
+- **Location**: Bengaluru / Mumbai
+- **Dater's Self-Descriptions**: Editable bio, ideal date, partner preferences, green flags, and quirks
+- **Prompts & Stories**: Live editable Hinge prompt cards
+- **Indian Matchmaking**: Editable height, diet, mother tongue, sun sign, kundali score, and trust score
+- **VIP Soundtrack**: Customizable song title and artist
 
 ---
 
-## 🛠️ Tech Stack
+## 🤝 The Core Wingman System
 
-- **Framework**: React 19 + TypeScript
-- **Bundler**: Vite 8
+1. **Friend Descriptions & Vouches**:
+   - Friends write authentic descriptions of Yash Sunil.
+   - Pinned directly to his public dating card with verified wingman badges.
+   - Friends can submit new vouches at any time from the Wingman Hub or floating button.
+2. **In-App Match Link Scout**:
+   - Friends can recommend candidates from **LinkedIn, Instagram, X/Twitter, TikTok, or Shaadi**.
+   - The app auto-detects the platform from the URL and applies native badge branding.
+   - Yash Sunil manages incoming recommendations in a full dating pipeline with private notes.
+
+---
+
+## 🛠️ Tech Stack & Scripts
+
+- **Framework**: React 19 + TypeScript (Strict with `verbatimModuleSyntax`)
 - **Styling**: Tailwind CSS v4
 - **Icons**: Lucide React
-- **Micro-Interactions**: Canvas Confetti
-- **State & Storage**: React Context API + LocalStorage synchronization
-
----
-
-## 💻 Getting Started Locally
-
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm or pnpm
-
-### Installation
+- **Micro-interactions**: Canvas Confetti
+- **Storage**: LocalStorage automatic sync with demo reset
 
 ```bash
-# Clone the repository
-git clone https://github.com/vijayraj122006-arch/yashdate.git
-cd yashdate
-
-# Install dependencies
+# Run locally
 npm install
-
-# Start local development server
 npm run dev
-```
 
-Visit `http://localhost:5173` to explore the app!
-
-### Production Build
-
-```bash
+# Production build
 npm run build
-npm run preview
-```
-
----
-
-## 📁 Project Structure
-
-```
-yashdate/
-├── index.html                  # HTML entry point
-├── package.json                # Project dependencies and scripts
-├── tsconfig.json               # TypeScript configuration
-├── vite.config.ts              # Vite + Tailwind configuration
-├── src/
-│   ├── types/
-│   │   └── index.ts            # Core TypeScript interfaces
-│   ├── data/
-│   │   └── initialData.ts      # Default profile, endorsements & match leads
-│   ├── utils/
-│   │   └── platformHelper.ts   # Platform link detector (Instagram, LinkedIn, etc.)
-│   ├── context/
-│   │   └── AppContext.tsx      # State management & persistent storage
-│   ├── components/
-│   │   ├── Navbar.tsx          # Navigation, view switcher, quick actions
-│   │   ├── DaterDashboard.tsx  # Dater cockpit (bio, endorsements, match pipeline)
-│   │   ├── FriendWingmanHub.tsx# Hub for friends to describe & send links
-│   │   ├── PublicDatingCard.tsx# Public view seen by prospective dates
-│   │   ├── EndorsementCard.tsx # Testimonial card component
-│   │   ├── MatchLeadCard.tsx   # Candidate link card component
-│   │   ├── FriendEndorsementModal.tsx # Friend description submission modal
-│   │   ├── SendMatchLinkModal.tsx     # Friend link submission modal
-│   │   └── ToastContainer.tsx  # Floating notification toasts
-│   ├── App.tsx                 # Root application
-│   ├── main.tsx                # React DOM render entry
-│   └── index.css               # Tailwind CSS v4 styles
-└── dist/                       # Production build output
 ```
 
 ---
 
 ## 📄 License
 
-MIT License. Crafted with ❤️ for better, friend-backed dating.
+MIT. Built with ❤️ for Yash Sunil.

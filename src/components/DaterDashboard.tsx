@@ -16,6 +16,9 @@ import {
   Copy,
   ExternalLink,
   ShieldCheck,
+  MessageSquare,
+  Crown,
+  Music,
 } from 'lucide-react';
 
 interface Props {
@@ -30,12 +33,12 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
     endorsements,
     recommendations,
     setCurrentView,
-    addToast
+    addToast,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'bio' | 'endorsements' | 'matches' | 'invite'>('matches');
+  const [activeTab, setActiveTab] = useState<'matches' | 'endorsements' | 'bio' | 'matchmaking' | 'invite'>('matches');
 
-  // Local state for editing dater's description
+  // Fully dynamic state - nothing hardcoded!
   const [formData, setFormData] = useState({
     name: daterProfile.name,
     age: daterProfile.age,
@@ -51,6 +54,21 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
     hotTakeOrQuirk: daterProfile.hotTakeOrQuirk,
     hobbiesInput: daterProfile.hobbies.join(', '),
     greenFlagsInput: daterProfile.myGreenFlags.join('\n'),
+    // Prompts
+    prompt1: daterProfile.prompts[0]?.answer || '',
+    prompt2: daterProfile.prompts[1]?.answer || '',
+    prompt3: daterProfile.prompts[2]?.answer || '',
+    // Matchmaking details (Shaadi / TrulyMadly)
+    height: daterProfile.matchmakingDetails.height,
+    motherTongue: daterProfile.matchmakingDetails.motherTongue,
+    diet: daterProfile.matchmakingDetails.diet,
+    sunSign: daterProfile.matchmakingDetails.sunSign,
+    familyType: daterProfile.matchmakingDetails.familyType,
+    kundaliGunas: daterProfile.matchmakingDetails.kundaliGunas,
+    trulyMadlyTrustScore: daterProfile.matchmakingDetails.trulyMadlyTrustScore,
+    // Raya Soundtrack
+    soundtrackTitle: daterProfile.soundtrack.title,
+    soundtrackArtist: daterProfile.soundtrack.artist,
   });
 
   // Filter states for recommendations
@@ -61,7 +79,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
     e.preventDefault();
     updateDaterProfile({
       name: formData.name.trim(),
-      age: Number(formData.age) || 24,
+      age: Number(formData.age) || 20,
       pronouns: formData.pronouns.trim(),
       location: formData.location.trim(),
       occupation: formData.occupation.trim(),
@@ -80,6 +98,41 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
         .split('\n')
         .map((f) => f.trim())
         .filter(Boolean),
+      prompts: [
+        {
+          id: 'p-1',
+          question: "My friends' favorite story about me...",
+          answer: formData.prompt1,
+          likedByCount: daterProfile.prompts[0]?.likedByCount || 14,
+        },
+        {
+          id: 'p-2',
+          question: 'Together, we could...',
+          answer: formData.prompt2,
+          likedByCount: daterProfile.prompts[1]?.likedByCount || 22,
+        },
+        {
+          id: 'p-3',
+          question: 'The key to my heart is...',
+          answer: formData.prompt3,
+          likedByCount: daterProfile.prompts[2]?.likedByCount || 19,
+        },
+      ],
+      matchmakingDetails: {
+        ...daterProfile.matchmakingDetails,
+        height: formData.height,
+        motherTongue: formData.motherTongue,
+        diet: formData.diet,
+        sunSign: formData.sunSign,
+        familyType: formData.familyType,
+        kundaliGunas: Number(formData.kundaliGunas) || 34,
+        trulyMadlyTrustScore: Number(formData.trulyMadlyTrustScore) || 99,
+      },
+      soundtrack: {
+        ...daterProfile.soundtrack,
+        title: formData.soundtrackTitle,
+        artist: formData.soundtrackArtist,
+      },
     });
   };
 
@@ -89,12 +142,11 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
     return matchesPlatform && matchesStatus;
   });
 
-
   const copyInviteMessage = (type: 'vouch' | 'scout') => {
     const appUrl = window.location.href;
     const msg =
       type === 'vouch'
-        ? `Hey! I'm using ${daterProfile.name}Date — write a friend description / vouch about me here: ${appUrl} ❤️`
+        ? `Hey! I'm on ${daterProfile.name}Date — write a friend description / vouch about me here: ${appUrl} ❤️`
         : `Hey! Be my wingman on ${daterProfile.name}Date: if you see anyone cute or interesting on LinkedIn or Instagram, drop their link here: ${appUrl} 🚀`;
     navigator.clipboard.writeText(msg);
     addToast('Invite text copied to clipboard! Ready to send on WhatsApp or Messages 📱', 'success');
@@ -125,6 +177,9 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">
                   Seeking Dates
                 </span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">
+                  OkCupid 97% Match
+                </span>
               </div>
               <p className="text-sm font-medium text-slate-300 mt-1 flex items-center justify-center sm:justify-start gap-2">
                 <Briefcase className="w-4 h-4 text-slate-400" />
@@ -132,7 +187,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
               </p>
               <p className="text-xs text-slate-400 mt-0.5 flex items-center justify-center sm:justify-start gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                {daterProfile.location} • {daterProfile.pronouns}
+                {daterProfile.location} • {daterProfile.pronouns} • {daterProfile.matchmakingDetails.height}
               </p>
               <p className="text-xs sm:text-sm text-rose-200/90 mt-2 italic max-w-xl">
                 "{daterProfile.headline}"
@@ -179,7 +234,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
           }`}
         >
           <Compass className="w-4 h-4" />
-          <span>Friend-Sent Match Links</span>
+          <span>Scouted Match Links</span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-extrabold">
             {recommendations.length}
           </span>
@@ -194,7 +249,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
           }`}
         >
           <Heart className="w-4 h-4" />
-          <span>Friend Descriptions & Vouches</span>
+          <span>Friend Vouches & Descriptions</span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-extrabold">
             {endorsements.length}
           </span>
@@ -209,14 +264,26 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
           }`}
         >
           <FileText className="w-4 h-4" />
-          <span>My Self-Description & Bio</span>
+          <span>Self-Description & Hinge Prompts</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('matchmaking')}
+          className={`flex items-center gap-2 px-5 py-3 border-b-2 font-bold text-sm whitespace-nowrap transition cursor-pointer ${
+            activeTab === 'matchmaking'
+              ? 'border-amber-500 text-amber-400 bg-amber-500/5'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Crown className="w-4 h-4" />
+          <span>Shaadi / Biodata & Soundtrack</span>
         </button>
 
         <button
           onClick={() => setActiveTab('invite')}
           className={`flex items-center gap-2 px-5 py-3 border-b-2 font-bold text-sm whitespace-nowrap transition cursor-pointer ${
             activeTab === 'invite'
-              ? 'border-amber-500 text-amber-400 bg-amber-500/5'
+              ? 'border-cyan-500 text-cyan-400 bg-cyan-500/5'
               : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
@@ -232,7 +299,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                 <Compass className="w-6 h-6 text-indigo-400" />
-                Wingman Recommendations (LinkedIn, Instagram & More)
+                Wingman Scouted Links (LinkedIn, Instagram & More)
               </h2>
               <p className="text-sm text-slate-400 mt-1">
                 Prospective matches and profile links sent directly to you by your trusted friends inside the web app.
@@ -335,7 +402,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
                 Friend Descriptions & Endorsements ({endorsements.length})
               </h2>
               <p className="text-sm text-slate-400 mt-1">
-                Here are descriptions written about you by your friends. Pin the best ones to show up on your public dating card!
+                Descriptions written about you by your friends. Pin the best ones to show up on your public dating card!
               </p>
             </div>
             <button
@@ -359,16 +426,16 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
         </section>
       )}
 
-      {/* Tab 3: My Self-Description & Bio */}
+      {/* Tab 3: Self-Description & Hinge Prompts Form */}
       {activeTab === 'bio' && (
         <section className="max-w-4xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
           <div className="mb-6">
             <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
               <FileText className="w-6 h-6 text-rose-400" />
-              Your Self-Description & Profile Settings
+              Edit Self-Description, Bio & Hinge Prompts
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Put your description, ideal date ideas, what you are looking for, and social handles.
+              Completely customizable for {formData.name} (age {formData.age}). Every detail is editable!
             </p>
           </div>
 
@@ -377,7 +444,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                  Your Name *
+                  Full Name *
                 </label>
                 <input
                   type="text"
@@ -426,7 +493,7 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
               </div>
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                  Occupation / Work
+                  Occupation / Work / Studies
                 </label>
                 <input
                   type="text"
@@ -449,18 +516,6 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                Avatar Image URL
-              </label>
-              <input
-                type="url"
-                value={formData.avatarUrl}
-                onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500 font-mono text-xs"
-              />
-            </div>
-
             {/* Dater's Own Description */}
             <div className="p-5 rounded-2xl bg-slate-950/60 border border-rose-500/30">
               <div className="flex items-center gap-2 mb-2">
@@ -469,9 +524,6 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
                   Your Self-Description ("About Me") *
                 </label>
               </div>
-              <p className="text-xs text-slate-400 mb-2.5">
-                Describe who you are, what you enjoy doing, what drives you, and what kind of conversations you love having on dates.
-              </p>
               <textarea
                 required
                 rows={5}
@@ -481,33 +533,79 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
               />
             </div>
 
-            {/* Ideal Date */}
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                My Ideal First Date
-              </label>
-              <textarea
-                rows={2}
-                value={formData.idealDate}
-                onChange={(e) => setFormData({ ...formData, idealDate: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500 resize-none"
-              />
+            {/* Hinge Prompts Fields */}
+            <div className="p-5 rounded-2xl bg-slate-950/60 border border-emerald-500/30 space-y-4">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-emerald-400" />
+                <label className="block text-sm font-bold uppercase tracking-wider text-emerald-300">
+                  Hinge Prompts & Stories
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">
+                  1. "My friends' favorite story about me..."
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.prompt1}
+                  onChange={(e) => setFormData({ ...formData, prompt1: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">
+                  2. "Together, we could..."
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.prompt2}
+                  onChange={(e) => setFormData({ ...formData, prompt2: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">
+                  3. "The key to my heart is..."
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.prompt3}
+                  onChange={(e) => setFormData({ ...formData, prompt3: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-emerald-500"
+                />
+              </div>
             </div>
 
-            {/* What I'm looking for */}
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                What I'm Looking For in a Partner
-              </label>
-              <textarea
-                rows={2}
-                value={formData.whatImLookingFor}
-                onChange={(e) => setFormData({ ...formData, whatImLookingFor: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500 resize-none"
-              />
+            {/* Ideal Date & What Looking For */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Ideal Date
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.idealDate}
+                  onChange={(e) => setFormData({ ...formData, idealDate: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  What I'm Looking For
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.whatImLookingFor}
+                  onChange={(e) => setFormData({ ...formData, whatImLookingFor: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500"
+                />
+              </div>
             </div>
 
-            {/* Green flags & hot takes */}
+            {/* Hobbies & Green Flags */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
@@ -517,50 +615,174 @@ export const DaterDashboard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSend
                   rows={4}
                   value={formData.greenFlagsInput}
                   onChange={(e) => setFormData({ ...formData, greenFlagsInput: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500 resize-none font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500"
                 />
               </div>
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                  Hot Take / Quirk / Fun Fact
+                  Hobbies & Passions (comma separated)
                 </label>
                 <textarea
                   rows={4}
-                  value={formData.hotTakeOrQuirk}
-                  onChange={(e) => setFormData({ ...formData, hotTakeOrQuirk: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500 resize-none"
+                  value={formData.hobbiesInput}
+                  onChange={(e) => setFormData({ ...formData, hobbiesInput: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500"
                 />
               </div>
             </div>
 
-            {/* Hobbies */}
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                Hobbies & Passions (comma separated)
-              </label>
-              <input
-                type="text"
-                value={formData.hobbiesInput}
-                onChange={(e) => setFormData({ ...formData, hobbiesInput: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-rose-500"
-              />
-            </div>
-
-            {/* Submit button */}
             <div className="pt-4 flex justify-end">
               <button
                 type="submit"
                 className="px-8 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold text-sm shadow-xl shadow-rose-500/30 flex items-center gap-2 transition cursor-pointer"
               >
                 <Check className="w-5 h-5" />
-                <span>Save Description & Profile</span>
+                <span>Save Description & Prompts</span>
               </button>
             </div>
           </form>
         </section>
       )}
 
-      {/* Tab 4: Invite Wingmen */}
+      {/* Tab 4: Shaadi, TrulyMadly & Raya Details Form */}
+      {activeTab === 'matchmaking' && (
+        <section className="max-w-4xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <Crown className="w-6 h-6 text-amber-400" />
+              Shaadi, TrulyMadly & Raya Custom Settings
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Customize Indian matchmaking parameters, trust score, and Raya profile music soundtrack.
+            </p>
+          </div>
+
+          <form onSubmit={handleSaveProfile} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Height
+                </label>
+                <input
+                  type="text"
+                  value={formData.height}
+                  onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-amber-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Mother Tongue
+                </label>
+                <input
+                  type="text"
+                  value={formData.motherTongue}
+                  onChange={(e) => setFormData({ ...formData, motherTongue: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-amber-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Diet
+                </label>
+                <input
+                  type="text"
+                  value={formData.diet}
+                  onChange={(e) => setFormData({ ...formData, diet: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-amber-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Sun Sign
+                </label>
+                <input
+                  type="text"
+                  value={formData.sunSign}
+                  onChange={(e) => setFormData({ ...formData, sunSign: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-amber-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Kundali Guna Match (out of 36)
+                </label>
+                <input
+                  type="number"
+                  max="36"
+                  min="1"
+                  value={formData.kundaliGunas}
+                  onChange={(e) => setFormData({ ...formData, kundaliGunas: Number(e.target.value) })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-amber-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  TrulyMadly Trust Score (%)
+                </label>
+                <input
+                  type="number"
+                  max="100"
+                  min="50"
+                  value={formData.trulyMadlyTrustScore}
+                  onChange={(e) => setFormData({ ...formData, trulyMadlyTrustScore: Number(e.target.value) })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm outline-none focus:border-amber-500"
+                />
+              </div>
+            </div>
+
+            {/* Raya Profile Soundtrack */}
+            <div className="p-5 rounded-2xl bg-slate-950/60 border border-purple-500/30 space-y-4">
+              <div className="flex items-center gap-2">
+                <Music className="w-4 h-4 text-purple-400" />
+                <label className="block text-sm font-bold uppercase tracking-wider text-purple-300">
+                  Raya VIP Profile Soundtrack
+                </label>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1">
+                    Song Title
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.soundtrackTitle}
+                    onChange={(e) => setFormData({ ...formData, soundtrackTitle: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-purple-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1">
+                    Artist / Version
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.soundtrackArtist}
+                    onChange={(e) => setFormData({ ...formData, soundtrackArtist: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-purple-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <button
+                type="submit"
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white font-bold text-sm shadow-xl shadow-amber-500/25 flex items-center gap-2 transition cursor-pointer"
+              >
+                <Check className="w-5 h-5" />
+                <span>Save Matchmaking & Music Settings</span>
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
+
+      {/* Tab 5: Invite Wingmen */}
       {activeTab === 'invite' && (
         <section className="max-w-3xl mx-auto space-y-6">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center">

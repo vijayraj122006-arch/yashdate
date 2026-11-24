@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Navbar } from './components/Navbar';
+import { AppModeSwitcher } from './components/AppModeSwitcher';
 import { DaterDashboard } from './components/DaterDashboard';
 import { FriendWingmanHub } from './components/FriendWingmanHub';
 import { PublicDatingCard } from './components/PublicDatingCard';
@@ -21,6 +22,9 @@ const MainContent: React.FC = () => {
           onOpenEndorseModal={() => setIsEndorseModalOpen(true)}
           onOpenSendLinkModal={() => setIsSendLinkModalOpen(true)}
         />
+
+        {/* Global Dating Mode Switcher (Tinder, Bumble, Hinge, OkCupid, Shaadi, Raya, Happn, Fusion) */}
+        <AppModeSwitcher />
 
         <main className="pb-16">
           {currentView === 'dater_dashboard' && (
@@ -67,7 +71,7 @@ const MainContent: React.FC = () => {
               <Heart className="w-3.5 h-3.5 fill-rose-500" />
             </span>
             <span>
-              <strong>YashDate</strong> — Where dating meets honest friend endorsements & community wingmen.
+              <strong>YashDate</strong> — Multi-app fusion dating (Tinder, Bumble, Hinge, OkCupid, Shaadi, TrulyMadly, Raya, Happn).
             </span>
           </div>
 
