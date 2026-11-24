@@ -36,18 +36,19 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-xl p-6 sm:p-7 text-slate-100 my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-[#13131c] border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-7 text-zinc-100 my-8">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-white p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+          data-testid="endorse-modal-close"
+          className="absolute top-5 right-5 text-zinc-400 hover:text-white p-2 rounded-xl bg-[#181824] hover:bg-[#222232] border border-white/5 transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-2.5 mb-1">
-          <div className="p-2 bg-rose-600/20 text-rose-400 rounded-lg">
-            <Heart className="w-4 h-4 fill-rose-500" />
+        <div className="flex items-center gap-2.5 mb-1 text-left">
+          <div className="p-2 bg-gradient-to-tr from-rose-600 to-pink-600 text-white rounded-xl shadow-md shadow-rose-600/25">
+            <Heart className="w-4 h-4 fill-white" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">
@@ -55,77 +56,82 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
             </h2>
           </div>
         </div>
-        <p className="text-xs text-slate-400 mb-4">
+        <p className="text-xs text-zinc-400 mb-4 text-left">
           Write an honest, genuine description about what he is like in real life.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-3.5 text-left">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
                 Your Name *
               </label>
               <input
                 type="text"
                 required
+                data-testid="vouch-input-name"
                 value={friendName}
                 onChange={(e) => setFriendName(e.target.value)}
-                placeholder="e.g. Ashwin"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
+                placeholder="e.g. Rahul"
+                className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 transition"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
                 Relationship
               </label>
               <input
                 type="text"
+                data-testid="vouch-input-rel"
                 value={relationship}
                 onChange={(e) => setRelationship(e.target.value)}
                 placeholder="e.g. Roommate, College Friend"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
+                className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 transition"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
               Years Known
             </label>
             <input
               type="number"
               min="0.5"
               step="0.5"
+              data-testid="vouch-input-years"
               value={yearsKnown}
               onChange={(e) => setYearsKnown(Number(e.target.value))}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-rose-500"
+              className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
               Describe {daterProfile.name} *
             </label>
             <textarea
               required
               rows={3}
+              data-testid="vouch-input-desc"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder={`What is ${daterProfile.name} really like? His humor, kindness, pilot ambition, or cooking?`}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs leading-relaxed outline-none focus:border-rose-500 resize-none"
+              className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs leading-relaxed outline-none focus:border-rose-500 resize-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
               Why should someone date him?
             </label>
             <textarea
               rows={2}
+              data-testid="vouch-input-why"
               value={whyYouShouldDateThem}
               onChange={(e) => setWhyYouShouldDateThem(e.target.value)}
               placeholder="e.g. He is 6ft, thoughtful, cooks great meals, and treats people with genuine care."
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs leading-relaxed outline-none focus:border-rose-500 resize-none"
+              className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs leading-relaxed outline-none focus:border-rose-500 resize-none transition"
             />
           </div>
 
@@ -133,13 +139,15 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition cursor-pointer"
+              data-testid="vouch-cancel-btn"
+              className="px-4 py-2 rounded-xl bg-[#181824] hover:bg-[#222232] text-zinc-300 text-xs font-medium border border-white/5 transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition cursor-pointer"
+              data-testid="vouch-submit-btn"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white text-xs font-semibold shadow-md shadow-rose-600/25 flex items-center gap-1.5 transition cursor-pointer"
             >
               <Heart className="w-3.5 h-3.5 fill-white" /> Post Vouch
             </button>

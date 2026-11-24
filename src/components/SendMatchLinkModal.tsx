@@ -51,17 +51,18 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-xl p-6 sm:p-7 text-slate-100 my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-[#13131c] border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-7 text-zinc-100 my-8">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-white p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+          data-testid="send-match-modal-close"
+          className="absolute top-5 right-5 text-zinc-400 hover:text-white p-2 rounded-xl bg-[#181824] hover:bg-[#222232] border border-white/5 transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-2.5 mb-1">
-          <div className="p-2 bg-sky-600/20 text-sky-400 rounded-lg">
+        <div className="flex items-center gap-2.5 mb-1 text-left">
+          <div className="p-2 bg-gradient-to-tr from-sky-600 to-blue-600 text-white rounded-xl shadow-md shadow-sky-600/25">
             <Compass className="w-4 h-4" />
           </div>
           <div>
@@ -70,78 +71,83 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
             </h2>
           </div>
         </div>
-        <p className="text-xs text-slate-400 mb-4">
+        <p className="text-xs text-zinc-400 mb-4 text-left">
           Found someone on LinkedIn or Instagram who would hit it off with {daterProfile.name}?
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-3.5 text-left">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
               Your Name *
             </label>
             <input
               type="text"
               required
+              data-testid="match-input-friend"
               value={friendName}
               onChange={(e) => setFriendName(e.target.value)}
               placeholder="e.g. Pooja"
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500 transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
               Profile Link (LinkedIn, Instagram, etc.) *
             </label>
             <input
               type="url"
               required
+              data-testid="match-input-link"
               value={profileLink}
               onChange={handleUrlChange}
               placeholder="https://instagram.com/username or https://linkedin.com/in/username"
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500 font-mono text-[11px] transition"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
                 Candidate Name *
               </label>
               <input
                 type="text"
                 required
+                data-testid="match-input-candidate"
                 value={candidateName}
                 onChange={(e) => setCandidateName(e.target.value)}
                 placeholder="e.g. Diya"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-sky-500"
+                className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500 transition"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
                 Handle (optional)
               </label>
               <input
                 type="text"
+                data-testid="match-input-handle"
                 value={candidateHandle}
                 onChange={(e) => setCandidateHandle(e.target.value)}
                 placeholder="@diya_krish"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-sky-500"
+                className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500 transition"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
               Why would they vibe together?
             </label>
             <textarea
               required
               rows={3}
+              data-testid="match-input-pitch"
               value={pitchNote}
               onChange={(e) => setPitchNote(e.target.value)}
               placeholder="e.g. She loves Anuv Jain songs, studies design, and is super witty. You two would have great chemistry."
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs leading-relaxed outline-none focus:border-sky-500 resize-none"
+              className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs leading-relaxed outline-none focus:border-sky-500 resize-none transition"
             />
           </div>
 
@@ -149,13 +155,15 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition cursor-pointer"
+              data-testid="match-cancel-btn"
+              className="px-4 py-2 rounded-xl bg-[#181824] hover:bg-[#222232] text-zinc-300 text-xs font-medium border border-white/5 transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition cursor-pointer"
+              data-testid="match-submit-btn"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-semibold shadow-md shadow-sky-600/25 flex items-center gap-1.5 transition cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" /> Send to {daterProfile.name}
             </button>

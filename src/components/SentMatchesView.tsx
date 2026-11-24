@@ -37,13 +37,14 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
             <Compass className="w-5 h-5 text-sky-400" />
             Sent Match Recommendations
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             Profiles scouted and sent by friends for {daterProfile.name}.
           </p>
         </div>
         <button
           onClick={onOpenSendLinkModal}
-          className="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+          data-testid="send-match-tab-btn"
+          className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-md shadow-sky-600/20 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Send Match Link</span>
@@ -51,11 +52,18 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
       </div>
 
       {recommendations.length === 0 ? (
-        <div className="text-center py-12 bg-slate-900 border border-dashed border-slate-800 rounded-2xl p-6">
-          <p className="text-sm text-slate-400 mb-3">No match recommendations sent yet.</p>
+        <div className="text-center py-12 bg-[#13131c] border border-dashed border-white/10 rounded-3xl p-8 space-y-4 shadow-xl">
+          <div className="w-12 h-12 rounded-full bg-sky-500/15 border border-sky-500/25 text-sky-400 flex items-center justify-center mx-auto shadow-sm">
+            <Compass className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-white">No match recommendations sent yet</p>
+            <p className="text-xs text-zinc-400 mt-1">Friends can drop links from Instagram or LinkedIn here.</p>
+          </div>
           <button
             onClick={onOpenSendLinkModal}
-            className="px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-semibold"
+            data-testid="empty-send-match-btn"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-semibold shadow-md shadow-sky-600/25 transition cursor-pointer"
           >
             Recommend Someone from LinkedIn or Instagram
           </button>
@@ -65,7 +73,8 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
           {recommendations.map((item) => (
             <div
               key={item.id}
-              className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 relative text-left"
+              data-testid={`match-card-${item.id}`}
+              className="p-5 rounded-2xl bg-[#13131c] border border-white/10 space-y-3 relative text-left shadow-lg"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -75,11 +84,11 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
                       {item.candidateName}
                     </h4>
                     {item.candidateHandle && (
-                      <span className="text-xs text-slate-400 font-mono">
+                      <span className="text-xs text-zinc-400 font-mono">
                         {item.candidateHandle}
                       </span>
                     )}
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/5">
                       {item.platform}
                     </span>
                   </div>
@@ -88,7 +97,7 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
                     href={item.profileLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-300 mt-1"
+                    className="inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-300 mt-1 font-medium transition"
                   >
                     <span>View Profile</span>
                     <ExternalLink className="w-3 h-3" />
@@ -99,7 +108,8 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
                   <select
                     value={item.status}
                     onChange={(e) => updateMatchStatus(item.id, e.target.value as MatchStatus)}
-                    className="text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 outline-none cursor-pointer"
+                    data-testid={`match-status-select-${item.id}`}
+                    className="text-xs px-2.5 py-1.5 rounded-xl bg-[#181824] text-zinc-200 border border-white/10 outline-none cursor-pointer focus:border-sky-500"
                   >
                     {statusOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -110,7 +120,8 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
 
                   <button
                     onClick={() => deleteRecommendation(item.id)}
-                    className="p-1 text-slate-500 hover:text-red-400 transition"
+                    data-testid={`delete-match-${item.id}`}
+                    className="p-1.5 text-zinc-500 hover:text-rose-400 transition cursor-pointer"
                     title="Remove match"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -119,11 +130,11 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
               </div>
 
               {/* Friend pitch note */}
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+              <div className="p-3.5 rounded-xl bg-[#181824] border border-white/5 text-xs">
                 <span className="text-[10px] font-bold text-sky-400 uppercase tracking-wider block mb-0.5">
                   Why {item.friendName} recommended them:
                 </span>
-                <p className="text-slate-300 italic leading-relaxed">
+                <p className="text-zinc-200 italic leading-relaxed">
                   "{item.pitchNote}"
                 </p>
               </div>
@@ -136,23 +147,26 @@ export const SentMatchesView: React.FC<Props> = ({ onOpenSendLinkModal }) => {
                       type="text"
                       value={noteText}
                       onChange={(e) => setNoteText(e.target.value)}
+                      data-testid={`match-note-input-${item.id}`}
                       placeholder="Add private note..."
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs outline-none focus:border-sky-500"
+                      className="flex-1 px-3 py-1.5 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-sky-500"
                     />
                     <button
                       onClick={() => handleSaveNote(item.id)}
-                      className="px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                      data-testid={`match-note-save-${item.id}`}
+                      className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-sm"
                     >
                       <Check className="w-3 h-3" /> Save
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between text-slate-400">
+                  <div className="flex items-center justify-between text-zinc-400">
                     <span className="text-[11px] italic">
                       {item.daterNotes ? `Note: ${item.daterNotes}` : 'No private notes yet.'}
                     </span>
                     <button
                       onClick={() => handleStartEditNote(item.id, item.daterNotes)}
+                      data-testid={`match-note-edit-${item.id}`}
                       className="text-[11px] text-sky-400 hover:text-sky-300 font-semibold cursor-pointer"
                     >
                       {item.daterNotes ? 'Edit Note' : '+ Add Note'}

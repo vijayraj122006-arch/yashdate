@@ -24,42 +24,44 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <header className="sticky top-0 z-40 bg-[#0e0e14]/90 backdrop-blur-xl border-b border-white/5">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 gap-3">
           {/* Brand */}
           <div
             onClick={() => setActiveTab('profile')}
-            className="flex items-center gap-2.5 cursor-pointer"
+            className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-9 h-9 rounded-xl bg-rose-600 flex items-center justify-center text-white shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-rose-500 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-500/25 transition group-hover:scale-105">
               <Heart className="w-4 h-4 fill-white" />
             </div>
             <div>
-              <span className="text-base font-bold text-white tracking-tight">
+              <span className="text-base font-bold text-white tracking-tight group-hover:text-rose-200 transition">
                 {daterProfile.name}
               </span>
             </div>
           </div>
 
-          {/* Clean Minimal Tabs */}
-          <nav className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800">
+          {/* Clean Modern Tabs */}
+          <nav className="flex items-center bg-[#15151e] p-1 rounded-2xl border border-white/10 shadow-inner">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                     isActive
-                      ? 'bg-slate-800 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/25'
+                      : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/5'
                   }`}
                 >
                   {tab.icon}
                   <span className="hidden sm:inline">{tab.label}</span>
                   {tab.badge !== undefined && tab.badge > 0 && (
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-bold border border-slate-700">
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-rose-500/20 text-rose-300'
+                    }`}>
                       {tab.badge}
                     </span>
                   )}
@@ -72,7 +74,7 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
           <div className="flex items-center gap-2">
             <button
               onClick={onOpenEndorseModal}
-              className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-600/10 text-rose-300 border border-rose-500/20 hover:bg-rose-600/20 transition cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-500/25 transition cursor-pointer shadow-sm shadow-rose-950"
             >
               <Heart className="w-3.5 h-3.5 fill-rose-400" />
               <span>Vouch</span>
@@ -80,7 +82,7 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
 
             <button
               onClick={onOpenSendLinkModal}
-              className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600/10 text-sky-300 border border-sky-500/20 hover:bg-sky-600/20 transition cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 hover:bg-sky-500/25 transition cursor-pointer shadow-sm shadow-sky-950"
             >
               <Compass className="w-3.5 h-3.5" />
               <span>Send Match</span>
@@ -88,7 +90,7 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition cursor-pointer"
+              className="p-2 rounded-xl bg-[#15151e] hover:bg-[#1f1f2c] text-zinc-300 hover:text-white border border-white/10 transition cursor-pointer"
               title="Share profile link"
             >
               <Share2 className="w-4 h-4" />
@@ -96,7 +98,7 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
 
             <button
               onClick={resetToDefault}
-              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 transition cursor-pointer"
+              className="p-2 rounded-xl bg-[#15151e] hover:bg-[#1f1f2c] text-zinc-400 hover:text-zinc-200 border border-white/10 transition cursor-pointer"
               title="Reset profile"
             >
               <RotateCcw className="w-4 h-4" />

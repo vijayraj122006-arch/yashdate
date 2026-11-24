@@ -42,16 +42,23 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PROFILE: 'yashdate_user_clean_v4',
-  ENDORSEMENTS: 'yashdate_endorsements_clean_v4',
-  RECOMMENDATIONS: 'yashdate_recommendations_clean_v4',
+  PROFILE: 'yashdate_user_clean_v5',
+  ENDORSEMENTS: 'yashdate_endorsements_clean_v5',
+  RECOMMENDATIONS: 'yashdate_recommendations_clean_v5',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [daterProfile, setDaterProfile] = useState<DaterProfile>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.PROFILE);
-      return saved ? JSON.parse(saved) : INITIAL_DATER_PROFILE;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (!parsed.photos || parsed.photos.length === 0) {
+          parsed.photos = INITIAL_DATER_PROFILE.photos;
+        }
+        return parsed;
+      }
+      return INITIAL_DATER_PROFILE;
     } catch {
       return INITIAL_DATER_PROFILE;
     }

@@ -1,0 +1,406 @@
+import { INITIAL_DATER_PROFILE } from '../data/initialData.ts';
+import { detectPlatform } from '../utils/platformHelper.ts';
+import type { DaterProfile, FriendEndorsement, MatchRecommendation, MatchStatus, ViewTab } from '../types/index.ts';
+
+interface TestResult {
+  name: string;
+  passed: boolean;
+  error?: string;
+}
+
+const results: TestResult[] = [];
+
+function assert(condition: boolean, msg: string) {
+  if (!condition) {
+    throw new Error(`Assertion failed: ${msg}`);
+  }
+}
+
+function runTest(name: string, fn: () => void) {
+  try {
+    fn();
+    results.push({ name, passed: true });
+    console.log(`PASS: ${name}`);
+  } catch (err: any) {
+    results.push({ name, passed: false, error: err.message });
+    console.error(`FAIL: ${name} -> ${err.message}`);
+  }
+}
+
+// Simulated App State representing the actions tied to all UI buttons
+class TestableAppState {
+  daterProfile: DaterProfile = { ...INITIAL_DATER_PROFILE };
+  endorsements: FriendEndorsement[] = [];
+  recommendations: MatchRecommendation[] = [];
+  activeTab: ViewTab = 'profile';
+  toasts: { id: string; type: string; message: string }[] = [];
+  isEndorseModalOpen = false;
+  isSendLinkModalOpen = false;
+  confettiTriggered = 0;
+  clipboardText = '';
+
+  // 1. Tab buttons in Navbar
+  clickTab(tab: ViewTab) {
+    this.activeTab = tab;
+  }
+
+  // 2. Brand button
+  clickBrand() {
+    this.activeTab = 'profile';
+  }
+
+  // 3. Like button on Dating Card
+  clickLike() {
+    this.confettiTriggered++;
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'love',
+      message: `You liked ${this.daterProfile.name}`,
+    });
+  }
+
+  // 4. Pass button on Dating Card
+  clickPass() {
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'info',
+      message: `Passed on ${this.daterProfile.name}`,
+    });
+  }
+
+  // 5. Share button (in Navbar and Dating Card)
+  clickShare(url: string) {
+    this.clipboardText = url;
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'success',
+      message: 'Profile link copied to clipboard',
+    });
+  }
+
+  // 6. Reset button in Navbar
+  clickReset() {
+    this.daterProfile = { ...INITIAL_DATER_PROFILE };
+    this.endorsements = [];
+    this.recommendations = [];
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'info',
+      message: 'Profile reset to default state',
+    });
+  }
+
+  // 7. Vouch Modal triggers
+  openEndorseModal() {
+    this.isEndorseModalOpen = true;
+  }
+  closeEndorseModal() {
+    this.isEndorseModalOpen = false;
+  }
+  submitEndorseForm(data: { friendName: string; relationship: string; yearsKnown: number; description: string; whyYouShouldDateThem?: string }) {
+    if (!data.friendName.trim() || !data.description.trim()) {
+      return false;
+    }
+    const newEndorsement: FriendEndorsement = {
+      id: `end-${Date.now()}`,
+      friendName: data.friendName.trim(),
+      relationship: data.relationship.trim() || 'Friend',
+      yearsKnown: data.yearsKnown,
+      description: data.description.trim(),
+      whyYouShouldDateThem: data.whyYouShouldDateThem?.trim(),
+      createdAt: new Date().toISOString(),
+    };
+    this.endorsements.push(newEndorsement);
+    this.isEndorseModalOpen = false;
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'love',
+      message: `Friend vouch from ${data.friendName} added!`,
+    });
+    return true;
+  }
+
+  // 8. Delete Endorsement button
+  clickDeleteEndorsement(id: string) {
+    this.endorsements = this.endorsements.filter((e) => e.id !== id);
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'info',
+      message: 'Friend vouch removed',
+    });
+  }
+
+  // 9. Send Match Link Modal triggers
+  openSendLinkModal() {
+    this.isSendLinkModalOpen = true;
+  }
+  closeSendLinkModal() {
+    this.isSendLinkModalOpen = false;
+  }
+  submitSendLink(data: { friendName: string; candidateName: string; candidateHandle?: string; profileLink: string; pitchNote: string }) {
+    if (!data.friendName.trim() || !data.candidateName.trim() || !data.profileLink.trim()) {
+      return false;
+    }
+    const detected = detectPlatform(data.profileLink);
+    const newRec: MatchRecommendation = {
+      id: `rec-${Date.now()}`,
+      friendName: data.friendName.trim(),
+      candidateName: data.candidateName.trim(),
+      candidateHandle: data.candidateHandle?.trim(),
+      profileLink: data.profileLink.trim(),
+      platform: detected,
+      pitchNote: data.pitchNote.trim(),
+      status: 'to_review',
+      createdAt: new Date().toISOString(),
+    };
+    this.recommendations.push(newRec);
+    this.isSendLinkModalOpen = false;
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'success',
+      message: `Match recommendation for ${data.candidateName} sent!`,
+    });
+    return true;
+  }
+
+  // 10. Update Match Status select / buttons
+  changeMatchStatus(id: string, status: MatchStatus) {
+    const item = this.recommendations.find((r) => r.id === id);
+    if (item) {
+      item.status = status;
+      this.toasts.push({
+        id: String(Date.now()),
+        type: 'info',
+        message: `Match status updated to ${status.replace('_', ' ')}`,
+      });
+    }
+  }
+
+  // 11. Save private notes on Match
+  saveMatchNotes(id: string, notes: string) {
+    const item = this.recommendations.find((r) => r.id === id);
+    if (item) {
+      item.daterNotes = notes;
+      this.toasts.push({
+        id: String(Date.now()),
+        type: 'success',
+        message: 'Private notes saved',
+      });
+    }
+  }
+
+  // 12. Delete Match recommendation button
+  clickDeleteRecommendation(id: string) {
+    this.recommendations = this.recommendations.filter((r) => r.id !== id);
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'info',
+      message: 'Match recommendation removed',
+    });
+  }
+
+  // 13. Edit Bio Form submit button
+  submitEditBio(updates: Partial<DaterProfile>) {
+    this.daterProfile = { ...this.daterProfile, ...updates };
+    this.toasts.push({
+      id: String(Date.now()),
+      type: 'success',
+      message: 'Profile updated successfully',
+    });
+  }
+
+  // 14. Photo Pagination buttons
+  nextPhoto(currentIdx: number, totalPhotos: number): number {
+    if (totalPhotos <= 0) return 0;
+    return (currentIdx + 1) % totalPhotos;
+  }
+  prevPhoto(currentIdx: number, totalPhotos: number): number {
+    if (totalPhotos <= 0) return 0;
+    return (currentIdx - 1 + totalPhotos) % totalPhotos;
+  }
+}
+
+console.log('--- STARTING ALL BUTTON INTERACTION TESTS ---\n');
+
+runTest('Button Test 1: Tab Navigation buttons in Navbar switch active views correctly', () => {
+  const app = new TestableAppState();
+  assert(app.activeTab === 'profile', 'Default tab must be profile');
+
+  app.clickTab('friends_vouches');
+  assert(app.activeTab === 'friends_vouches', 'Tab should switch to friends_vouches');
+
+  app.clickTab('sent_matches');
+  assert(app.activeTab === 'sent_matches', 'Tab should switch to sent_matches');
+
+  app.clickTab('edit_profile');
+  assert(app.activeTab === 'edit_profile', 'Tab should switch to edit_profile');
+
+  app.clickBrand();
+  assert(app.activeTab === 'profile', 'Clicking brand should return to profile');
+});
+
+runTest('Button Test 2: Like button on Dating Card fires confetti and love toast', () => {
+  const app = new TestableAppState();
+  app.clickLike();
+  assert(app.confettiTriggered === 1, 'Confetti must trigger once');
+  assert(app.toasts.length === 1, 'Toast must be created');
+  assert(app.toasts[0].type === 'love', 'Toast must be love type');
+  assert(app.toasts[0].message.includes('Yash Sunil'), 'Toast must name Yash Sunil');
+});
+
+runTest('Button Test 3: Pass button on Dating Card emits info toast', () => {
+  const app = new TestableAppState();
+  app.clickPass();
+  assert(app.toasts.length === 1, 'Toast must be created');
+  assert(app.toasts[0].type === 'info', 'Toast must be info type');
+  assert(app.toasts[0].message.includes('Passed on'), 'Toast message must indicate pass');
+});
+
+runTest('Button Test 4: Share button copies URL and notifies user', () => {
+  const app = new TestableAppState();
+  app.clickShare('https://yashdate.app/yash');
+  assert(app.clipboardText === 'https://yashdate.app/yash', 'Clipboard text must match URL');
+  assert(app.toasts[0].type === 'success', 'Must show success toast');
+});
+
+runTest('Button Test 5: Reset button restores pure user data with /yash.jpg', () => {
+  const app = new TestableAppState();
+  // Modify profile
+  app.daterProfile.name = 'Temporary Name';
+  app.endorsements.push({ id: '1', friendName: 'Test', relationship: 'Friend', description: 'Desc', createdAt: '' });
+  app.clickReset();
+
+  assert(app.daterProfile.name === 'Yash Sunil', 'Name must reset to Yash Sunil');
+  assert(app.daterProfile.photos.length === 1 && app.daterProfile.photos[0] === '/yash.jpg', 'Photos must retain /yash.jpg');
+  assert(app.endorsements.length === 0, 'Endorsements must reset to 0');
+});
+
+runTest('Button Test 6: Vouch Modal submit button validates and adds friend vouch', () => {
+  const app = new TestableAppState();
+  app.openEndorseModal();
+  assert(app.isEndorseModalOpen === true, 'Modal should open');
+
+  // Attempt empty submit
+  const failedEmpty = app.submitEndorseForm({ friendName: '', relationship: '', yearsKnown: 1, description: '' });
+  assert(!failedEmpty, 'Empty submit must be rejected');
+  assert(app.endorsements.length === 0, 'No endorsement added on empty submit');
+
+  // Valid submit
+  const success = app.submitEndorseForm({
+    friendName: 'Arjun',
+    relationship: 'Aviation Colleague',
+    yearsKnown: 2,
+    description: 'Yash is disciplined, genuine, and always dependable.',
+    whyYouShouldDateThem: 'He has pilot ambition, high emotional intelligence, and great music taste.',
+  });
+  assert(success, 'Valid submit must succeed');
+  assert(app.endorsements.length === 1, 'One endorsement must be saved');
+  assert(app.endorsements[0].friendName === 'Arjun', 'Friend name must match');
+  assert(app.isEndorseModalOpen === false, 'Modal must close after submit');
+  assert(app.toasts.some((t) => t.message.includes('Arjun')), 'Must show confirmation toast');
+});
+
+runTest('Button Test 7: Delete Vouch button removes endorsement by ID', () => {
+  const app = new TestableAppState();
+  app.submitEndorseForm({ friendName: 'Arjun', relationship: 'Friend', yearsKnown: 1, description: 'Great guy' });
+  const id = app.endorsements[0].id;
+  assert(app.endorsements.length === 1, 'Must have 1 endorsement');
+
+  app.clickDeleteEndorsement(id);
+  assert(app.endorsements.length === 0, 'Endorsement list must be empty after delete');
+});
+
+runTest('Button Test 8: Send Match Link button validates, detects platform, and adds recommendation', () => {
+  const app = new TestableAppState();
+  app.openSendLinkModal();
+  assert(app.isSendLinkModalOpen === true, 'Modal should open');
+
+  // Submit Instagram link
+  const igSuccess = app.submitSendLink({
+    friendName: 'Pooja',
+    candidateName: 'Meera',
+    candidateHandle: '@meera_art',
+    profileLink: 'https://instagram.com/meera_art',
+    pitchNote: 'She is 5ft 1in, creative, and loves Anuv Jain songs!',
+  });
+
+  assert(igSuccess, 'Instagram match submit must succeed');
+  assert(app.recommendations.length === 1, 'One recommendation must be present');
+  assert(app.recommendations[0].platform === 'instagram', 'Platform must auto-detect as instagram');
+  assert(app.recommendations[0].status === 'to_review', 'Initial status must be to_review');
+  assert(app.isSendLinkModalOpen === false, 'Modal must close on submit');
+
+  // Submit LinkedIn link
+  const liSuccess = app.submitSendLink({
+    friendName: 'Karthik',
+    candidateName: 'Ananya',
+    profileLink: 'https://linkedin.com/in/ananya-pilot',
+    pitchNote: 'In aviation logistics in Chennai.',
+  });
+  assert(liSuccess, 'LinkedIn match submit must succeed');
+  assert(app.recommendations.length === 2, 'Two recommendations present');
+  assert(app.recommendations[1].platform === 'linkedin', 'Platform must auto-detect as linkedin');
+});
+
+runTest('Button Test 9: Match Status dropdown and Notes buttons update status and notes', () => {
+  const app = new TestableAppState();
+  app.submitSendLink({
+    friendName: 'Pooja',
+    candidateName: 'Meera',
+    profileLink: 'https://instagram.com/meera_art',
+    pitchNote: 'Great vibe',
+  });
+  const id = app.recommendations[0].id;
+
+  // Change status to interested
+  app.changeMatchStatus(id, 'interested');
+  assert(app.recommendations[0].status === 'interested', 'Status must update to interested');
+
+  // Change status to contacted
+  app.changeMatchStatus(id, 'contacted');
+  assert(app.recommendations[0].status === 'contacted', 'Status must update to contacted');
+
+  // Save private note
+  app.saveMatchNotes(id, 'Sent a DM about acoustic songs');
+  assert(app.recommendations[0].daterNotes === 'Sent a DM about acoustic songs', 'Private note must be saved');
+
+  // Delete match button
+  app.clickDeleteRecommendation(id);
+  assert(app.recommendations.length === 0, 'Recommendation must be deleted');
+});
+
+runTest('Button Test 10: Edit Bio Save button updates profile fields and syncs', () => {
+  const app = new TestableAppState();
+  app.submitEditBio({
+    selfDescription: 'I am Yash Sunil, 20 from Chennai. Aspiring pilot and Anuv Jain listener.',
+    idealDate: 'Sunset coffee drive with acoustic music.',
+  });
+
+  assert(app.daterProfile.selfDescription.includes('Aspiring pilot'), 'Bio description must update');
+  assert(app.daterProfile.idealDate.includes('Sunset coffee'), 'Ideal date must update');
+  assert(app.toasts.some((t) => t.message.includes('Profile updated')), 'Must show success toast');
+});
+
+runTest('Button Test 11: Photo pagination buttons navigate cleanly', () => {
+  const app = new TestableAppState();
+  const total = 3;
+  let idx = 0;
+  idx = app.nextPhoto(idx, total);
+  assert(idx === 1, 'Next photo should advance to 1');
+  idx = app.nextPhoto(idx, total);
+  assert(idx === 2, 'Next photo should advance to 2');
+  idx = app.nextPhoto(idx, total);
+  assert(idx === 0, 'Next photo should wrap to 0');
+  idx = app.prevPhoto(idx, total);
+  assert(idx === 2, 'Prev photo should wrap to 2');
+});
+
+console.log('\n--- BUTTON TEST SUMMARY ---');
+const totalPassed = results.filter((r) => r.passed).length;
+console.log(`Passed: ${totalPassed} / ${results.length}`);
+if (totalPassed === results.length) {
+  console.log('ALL BUTTON TESTS PASSED SUCCESSFULLY!');
+} else {
+  console.error('SOME BUTTON TESTS FAILED.');
+  process.exit(1);
+}

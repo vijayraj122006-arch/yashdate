@@ -12,7 +12,7 @@ export const INITIAL_DATER_PROFILE: DaterProfile = {
   datingPreference: 'Likes short girls',
   selfDescription: '',
   idealDate: '',
-  photos: [],
+  photos: ['/yash.jpg'],
   socialLinks: [],
 };
 
