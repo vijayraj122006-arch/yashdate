@@ -1,9 +1,9 @@
-# YashDate — Minimalist Multi-Platform Dating Web App
+# YashDate — Clean & Minimalist Dating Web App
 
-> **A polished, clean, and minimalist dating app fusing the mechanics of Tinder, Bumble, Hinge, OkCupid, Shaadi, TrulyMadly, and Raya.**  
-> Built for **Yash Sunil** — a 6ft Mallu aviation cadet from Chennai who loves Anuv Jain and has a soft spot for short girls.
+> **A focused, spacious, and user-friendly dating app powered by friend endorsements & community recommendations.**  
+> Built for **Yash Sunil** (20, 6'0", Mallu from Chennai, aspiring pilot, likes short girls, Anuv Jain fan) with zero hardcoded values.
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-yashdate-sky.svg)](https://github.com/vijayraj122006-arch/yashdate)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-yashdate-rose.svg)](https://github.com/vijayraj122006-arch/yashdate)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19.x-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)](https://www.typescriptlang.org/)
@@ -11,44 +11,30 @@
 
 ---
 
-## 🌟 Persona & Character Profile
+## 🌟 The Core Experience
 
-- **Name**: Yash Sunil
-- **Age**: 20
-- **Height**: 6'0" (183 cm)
-- **Location**: Chennai, Tamil Nadu
-- **Roots**: Malayali / Mallu (Kerala heritage, brought up in Chennai)
-- **Ambition**: Aspiring Commercial Airline Pilot (Flight Cadet & Aviation Ground School)
-- **Vibe & Looks**: Cute and funny, but undeniably pretty boy aesthetic (charming dimples, fluffy hair, gentle humor)
-- **Dating Preference**: Soft spot for short girls (enjoys the cute height difference, affectionate banter, and letting her borrow his flight bomber jackets)
-- **Music Taste**: Devoted Anuv Jain fan (*Baarishein, Alag Aasmaan, Husn, Mishri* played on acoustic guitar)
-- **Ideal Date**: Sunset drive to Besant Nagar (Bessie) Beach, Chennai filter coffee, watching flight descents over Chennai airport runway viewing point, and sharing stories over acoustic music.
+1. **Dating Card (Prospective Match View)**:
+   - Clean, spacious photo card with smooth pagination.
+   - Core details: Name, age, 6ft height, location (Chennai), roots (Mallu).
+   - Focused badges: Aspiring Pilot, Anuv Jain, Likes short girls.
+   - **Dater's Self-Description ("About Me")** & **Ideal Date Idea**.
+   - **"What My Friends Say"**: Real, verified descriptions and testimonials written by his close friends.
+   - Direct Instagram & LinkedIn connect links.
+   - Clean, uncluttered Pass (✕) and Like (♥) actions.
 
----
+2. **Friend Vouches Tab**:
+   - Dedicated clean view of all testimonials written by friends.
+   - Quick "Write Vouch" modal for friends to add their descriptions.
 
-## 🎨 Clean, Polished & Minimalist UI/UX
+3. **Sent Matches Tab**:
+   - Clean pipeline of prospective date profile links sent by friends from **LinkedIn, Instagram, or Twitter**.
+   - Notes from friends explaining why they would hit it off.
+   - Direct links to open profiles and status tracking (*To Review, Interested, Contacted, Passed*).
+   - Quick modal for friends to drop new candidate links.
 
-1. **Zero Raw Emojis**:
-   - Replaced tacky unicode emojis with high-resolution **JPG photographic interest badges** (Aviation, Acoustic Guitar, Chennai Beach, Filter Coffee, Pasta Making, Bouldering).
-   - Crisp, minimal Lucide vector iconography throughout all navigation, action docks, and modals.
-2. **Zero Hardcoded Data**:
-   - Every single field across the app (name, age, height, location, roots, career ambition, dating preference, self-description, ideal date, prompts, compatibility questions, matchmaking details, friend endorsements, scouted links) is **100% dynamic and live-editable** in the Dater Studio.
-   - Built-in **JSON Configuration Manager**: Export your entire setup to a single `.json` file with one click, or import any JSON configuration string to restore or swap profiles instantly.
-3. **Multi-Platform Fusion Mechanics**:
-   - **Tinder Swipe Action Dock**: Clean Rewind, Pass, Super Like, Match, and Boost controls.
-   - **Bumble**: Compliment delivery on photos and honey minimal accents.
-   - **Hinge**: Editorial prompt cards with individual heart likes and acoustic voice memo player.
-   - **OkCupid & eharmony**: 98% Compatibility gauge and 29-dimension personality spectrum.
-   - **Shaadi & TrulyMadly**: 100% Verified trust score, 35/36 Kundali Guna match, and clean biodata specs.
-   - **Happn & CMB**: Real proximity crossed paths tracker and daily curated selection.
-   - **Raya**: Curated acoustic soundtrack player (*Baarishein by Anuv Jain*).
-
----
-
-## 🤝 The Core Wingman System
-
-- **Friend Endorsements**: Closest friends from Chennai and aviation academy (Ashwin, Pooja, Harish, Niveditha) share honest descriptions, green flags, and playful quirks.
-- **In-App Match Link Scout**: Friends drop candidate links from LinkedIn, Instagram, or Twitter with custom pitch notes and full pipeline status tracking (*To Review, Interested, DMed, Date Scheduled, Passed*).
+4. **Edit Bio Tab (Zero Hardcoding)**:
+   - Live, editable form for every single detail: Name, age, height, location, roots, career ambition, dating preferences, headline, bio, ideal date, and photo URLs.
+   - Instant local storage synchronization.
 
 ---
 
@@ -62,7 +48,7 @@ cd yashdate
 # Install dependencies
 npm install
 
-# Start development server
+# Start local development server
 npm run dev
 
 # Production build
@@ -73,4 +59,4 @@ npm run build
 
 ## 📄 License
 
-MIT. Built with precision for Yash Sunil.
+MIT. Clean, focused, and crafted for Yash Sunil.
