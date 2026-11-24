@@ -44,6 +44,7 @@ export interface DaterProfile {
   idealDate: string;
   photos: string[];
   socialLinks: SocialLink[];
+  whatsappNumber?: string;
 }
 
 export type UserRole = 'friend' | 'dater' | 'admin';

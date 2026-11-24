@@ -1,5 +1,6 @@
 import { INITIAL_DATER_PROFILE } from '../data/initialData.ts';
 import { detectPlatform } from '../utils/platformHelper.ts';
+import { cleanPhoneNumber, createVouchWhatsAppUrl, createMatchWhatsAppUrl } from '../utils/whatsappHelper.ts';
 import type {
   DaterProfile,
   FriendEndorsement,
@@ -586,6 +587,20 @@ runTest('Button Test 14: Auth Opening Screen authentication with Role, ID/Userna
   assert(app.session?.username === 'admin', 'Admin session active');
   assert(app.userRole === 'admin', 'Role set to admin');
   assert(app.permissions.canResetDatabase === true, 'Admin can reset database');
+});
+
+runTest('Button Test 15: WhatsApp notification link generator correctly formats Yash phone +91 94875 48740', () => {
+  const phone = '+91 94875 48740';
+  const clean = cleanPhoneNumber(phone);
+  assert(clean === '919487548740', 'Phone number must normalize to 919487548740');
+
+  const vouchUrl = createVouchWhatsAppUrl(phone, 'FriendUser', 'Great friend and pilot');
+  assert(vouchUrl.startsWith('https://wa.me/919487548740?text='), 'Vouch URL must target Yash WhatsApp');
+  assert(vouchUrl.includes('FriendUser'), 'Vouch text must name friend');
+
+  const matchUrl = createMatchWhatsAppUrl(phone, 'FriendUser', 'CandidateName', 'instagram', 'https://instagram.com/cand', 'Good vibe');
+  assert(matchUrl.startsWith('https://wa.me/919487548740?text='), 'Match URL must target Yash WhatsApp');
+  assert(matchUrl.includes('CandidateName'), 'Match text must include candidate');
 });
 
 console.log('\n--- BUTTON TEST SUMMARY ---');

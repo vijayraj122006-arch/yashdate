@@ -14,6 +14,7 @@ export const INITIAL_DATER_PROFILE: DaterProfile = {
   idealDate: '',
   photos: ['/yash.jpg'],
   socialLinks: [],
+  whatsappNumber: '+919487548740',
 };
 
 export const INITIAL_ENDORSEMENTS: FriendEndorsement[] = [];

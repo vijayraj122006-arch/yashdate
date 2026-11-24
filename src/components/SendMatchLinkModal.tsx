@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { detectPlatform } from '../utils/platformHelper';
+import { createMatchWhatsAppUrl } from '../utils/whatsappHelper';
 import type { PlatformType } from '../types';
-import { X, Send, Compass } from 'lucide-react';
+import { X, Send, Compass, MessageCircle } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [profileLink, setProfileLink] = useState('');
   const [platform, setPlatform] = useState<PlatformType>('instagram');
   const [pitchNote, setPitchNote] = useState('');
+  const [notifyWhatsapp, setNotifyWhatsapp] = useState(true);
 
   if (!isOpen) return null;
 
@@ -44,6 +46,18 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
       platform,
       pitchNote: pitchNote.trim(),
     });
+
+    if (notifyWhatsapp) {
+      const waUrl = createMatchWhatsAppUrl(
+        daterProfile.whatsappNumber,
+        friendName.trim(),
+        candidateName.trim(),
+        platform,
+        profileLink.trim(),
+        pitchNote.trim()
+      );
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
 
     onClose();
     setCandidateName('');
@@ -152,6 +166,23 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
               className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs leading-relaxed outline-none focus:border-sky-500 resize-none transition"
             />
           </div>
+
+          {/* WhatsApp Notification Option */}
+          <label className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#181824] border border-white/5 cursor-pointer text-xs text-zinc-300 hover:border-emerald-500/30 transition">
+            <input
+              type="checkbox"
+              checked={notifyWhatsapp}
+              onChange={(e) => setNotifyWhatsapp(e.target.checked)}
+              className="w-4 h-4 rounded accent-emerald-500 cursor-pointer"
+            />
+            <span className="flex-1 flex items-center justify-between">
+              <span className="flex items-center gap-1.5 font-medium text-emerald-400">
+                <MessageCircle className="w-3.5 h-3.5" />
+                Notify Yash on WhatsApp
+              </span>
+              <span className="text-[11px] text-zinc-400 font-mono">+91 94875 48740</span>
+            </span>
+          </label>
 
           <div className="pt-2 flex justify-end gap-2.5">
             <button

@@ -46,6 +46,7 @@ export const EditBioView: React.FC = () => {
     photo3: daterProfile.photos[2] || '',
     instagramUrl: daterProfile.socialLinks.find((l) => l.platform === 'instagram')?.url || '',
     linkedinUrl: daterProfile.socialLinks.find((l) => l.platform === 'linkedin')?.url || '',
+    whatsappNumber: daterProfile.whatsappNumber || '+91 94875 48740',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,6 +75,7 @@ export const EditBioView: React.FC = () => {
       datingPreference: formData.datingPreference.trim(),
       selfDescription: formData.selfDescription.trim(),
       idealDate: formData.idealDate.trim(),
+      whatsappNumber: formData.whatsappNumber.trim(),
       photos,
       socialLinks,
     });
@@ -307,6 +309,21 @@ export const EditBioView: React.FC = () => {
               className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 transition"
             />
           </div>
+        </div>
+
+        {/* WhatsApp Notification Number */}
+        <div className="pt-2 border-t border-white/10">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
+            WhatsApp Notification Number (where friends send alerts)
+          </label>
+          <input
+            type="tel"
+            data-testid="input-whatsapp"
+            value={formData.whatsappNumber}
+            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+            placeholder="+91 94875 48740"
+            className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 font-mono transition"
+          />
         </div>
 
         <div className="pt-3 flex justify-end">
