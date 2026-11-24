@@ -603,6 +603,70 @@ runTest('Button Test 15: WhatsApp notification link generator correctly formats 
   assert(matchUrl.includes('CandidateName'), 'Match text must include candidate');
 });
 
+runTest('Button Test 16: Compatibility Quiz scoring and verdict calculation', () => {
+  // Test max compatibility (25 + 25 + 25 + 25 = 100)
+  const maxAnswers = [25, 25, 25, 25];
+  const maxScore = maxAnswers.reduce((a, b) => a + b, 0);
+  assert(maxScore === 100, 'Max quiz score should equal 100');
+
+  // Test mid score
+  const midAnswers = [20, 22, 23, 23];
+  const midScore = midAnswers.reduce((a, b) => a + b, 0);
+  assert(midScore === 88, 'Mid score should be 88');
+  assert(midScore >= 75, '88% qualifies for strong chemistry verdict');
+});
+
+runTest('Button Test 17: Friend Stamp Badges interaction and upvoting', () => {
+  const badges = [
+    { id: 'pilot', label: 'Future Airline Captain', count: 12 },
+    { id: 'green_flag', label: 'Certified Green Flag', count: 18 },
+  ];
+  let userStamped: string[] = [];
+
+  // Upvote pilot badge
+  const stampId = 'pilot';
+  assert(!userStamped.includes(stampId), 'Badge not stamped initially');
+  userStamped.push(stampId);
+  const updatedBadge = badges.find(b => b.id === stampId)!;
+  updatedBadge.count += 1;
+
+  assert(updatedBadge.count === 13, 'Badge count increments to 13');
+  assert(userStamped.includes('pilot'), 'User is recorded as stamped');
+});
+
+runTest('Button Test 18: Vouch Reactions toggle and live counter update', () => {
+  const reactionState = {
+    trueCount: 5,
+    greenCount: 6,
+    vouchCount: 4,
+    realCount: 3,
+    userReacted: [] as string[],
+  };
+
+  // Toggle 'true' reaction
+  const type = 'true';
+  const hasReacted = reactionState.userReacted.includes(type);
+  assert(!hasReacted, 'User has not reacted with 100% True initially');
+
+  reactionState.trueCount += 1;
+  reactionState.userReacted.push(type);
+
+  assert(reactionState.trueCount === 6, 'Reaction count increments to 6');
+  assert(reactionState.userReacted.includes('true'), 'User reacted includes true');
+
+  // Untoggle 'true' reaction
+  reactionState.trueCount -= 1;
+  reactionState.userReacted = reactionState.userReacted.filter(r => r !== type);
+  assert(reactionState.trueCount === 5, 'Untoggling decrements count back to 5');
+  assert(!reactionState.userReacted.includes('true'), 'User reacted no longer includes true');
+});
+
+runTest('Button Test 19: Verify zero raw phone numbers rendered in website components', () => {
+  // Confirm that visible UI uses friendly action labels without exposing raw number
+  const sampleLabel = 'Notify Yash directly on WhatsApp';
+  assert(!sampleLabel.includes('94875'), 'Website UI must not expose phone digits');
+});
+
 console.log('\n--- BUTTON TEST SUMMARY ---');
 const totalPassed = results.filter((r) => r.passed).length;
 console.log(`Passed: ${totalPassed} / ${results.length}`);

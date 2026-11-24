@@ -15,13 +15,17 @@ import {
   X,
   Share2,
 } from 'lucide-react';
+import { FriendStampBadges } from './FriendStampBadges';
+import { VoiceNotePlayer } from './VoiceNotePlayer';
+import { VouchReactionButtons } from './VouchReactionButtons';
 
 interface Props {
   onOpenEndorseModal: () => void;
   onOpenSendLinkModal: () => void;
+  onOpenQuizModal?: () => void;
 }
 
-export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModal }) => {
+export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModal, onOpenQuizModal }) => {
   const { daterProfile, endorsements, setActiveTab, addToast, triggerConfetti, permissions, setIsRoleModalOpen } = useApp();
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
 
@@ -201,6 +205,32 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
 
         {/* Content Section */}
         <div className="p-6 space-y-6">
+          {/* Compatibility Quiz Banner */}
+          {onOpenQuizModal && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-950/70 via-[#181824] to-pink-950/70 border border-rose-500/30 flex items-center justify-between text-left shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 via-rose-500 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-500/25 shrink-0">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-white">
+                    Are You Yash's Type? 💘
+                  </h3>
+                  <p className="text-[11px] text-zinc-300">
+                    Take the 1-min interactive compatibility quiz & get your score!
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onOpenQuizModal}
+                data-testid="open-quiz-btn"
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-md shadow-rose-600/25 transition cursor-pointer whitespace-nowrap shrink-0 ml-2"
+              >
+                Take Quiz
+              </button>
+            </div>
+          )}
+
           {/* Self-Description */}
           <div className="space-y-1.5">
             <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
@@ -245,12 +275,15 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
             </div>
           )}
 
+          {/* Community Badges */}
+          <FriendStampBadges />
+
           {/* What My Friends Say (Friend Endorsements) */}
           <div className="pt-2 border-t border-white/5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-white">What Friends Say About Him</h3>
-                <p className="text-xs text-zinc-400">Descriptions written by his real friends</p>
+                <p className="text-xs text-zinc-400">Descriptions & vouches by real friends</p>
               </div>
               <button
                 onClick={onOpenEndorseModal}
@@ -261,6 +294,9 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
                 <span>Vouch</span>
               </button>
             </div>
+
+            {/* Featured Wingman Audio Vouch */}
+            <VoiceNotePlayer />
 
             {endorsements.length === 0 ? (
               <div className="p-4 rounded-2xl bg-[#181824] border border-dashed border-white/10 text-center space-y-2.5">
@@ -280,7 +316,7 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
                 {endorsements.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 rounded-2xl bg-[#181824] border border-white/10 space-y-2 text-left shadow-sm"
+                    className="p-4 rounded-2xl bg-[#181824] border border-white/10 space-y-2.5 text-left shadow-sm"
                   >
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-white">{item.friendName}</span>
@@ -294,6 +330,7 @@ export const PublicDatingCard: React.FC<Props> = ({ onOpenEndorseModal, onOpenSe
                         <strong className="text-rose-300">Why date him:</strong> {item.whyYouShouldDateThem}
                       </p>
                     )}
+                    <VouchReactionButtons vouchId={item.id} />
                   </div>
                 ))}
               </div>

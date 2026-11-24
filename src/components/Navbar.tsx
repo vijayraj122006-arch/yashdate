@@ -6,9 +6,10 @@ import { Heart, User, Users, Compass, Edit3, Share2, RotateCcw, LogOut } from 'l
 interface Props {
   onOpenEndorseModal: () => void;
   onOpenSendLinkModal: () => void;
+  onOpenQuizModal?: () => void;
 }
 
-export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModal }) => {
+export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModal, onOpenQuizModal }) => {
   const {
     activeTab,
     setActiveTab,
@@ -130,6 +131,16 @@ export const Navbar: React.FC<Props> = ({ onOpenEndorseModal, onOpenSendLinkModa
                 </>
               )}
             </button>
+
+            {onOpenQuizModal && (
+              <button
+                onClick={onOpenQuizModal}
+                data-testid="navbar-quiz-btn"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-rose-600/30 to-pink-600/30 text-rose-300 border border-rose-500/40 hover:bg-rose-500/40 transition cursor-pointer shadow-sm"
+              >
+                <span>💘 Quiz</span>
+              </button>
+            )}
 
             <button
               onClick={onOpenEndorseModal}

@@ -1,6 +1,9 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Heart, Plus, Trash2 } from 'lucide-react';
+import { WingmanLeaderboard } from './WingmanLeaderboard';
+import { VoiceNotePlayer } from './VoiceNotePlayer';
+import { VouchReactionButtons } from './VouchReactionButtons';
 
 interface Props {
   onOpenEndorseModal: () => void;
@@ -30,6 +33,12 @@ export const FriendVouchesView: React.FC<Props> = ({ onOpenEndorseModal }) => {
           <span>Write Vouch</span>
         </button>
       </div>
+
+      {/* Wingman Leaderboard */}
+      <WingmanLeaderboard />
+
+      {/* Featured Voice Note Vouch */}
+      <VoiceNotePlayer />
 
       {endorsements.length === 0 ? (
         <div className="text-center py-12 bg-[#13131c] border border-dashed border-white/10 rounded-3xl p-8 space-y-4 shadow-xl">
@@ -95,6 +104,8 @@ export const FriendVouchesView: React.FC<Props> = ({ onOpenEndorseModal }) => {
                   <strong className="text-rose-300">Why date him:</strong> {e.whyYouShouldDateThem}
                 </div>
               )}
+
+              <VouchReactionButtons vouchId={e.id} />
             </div>
           ))}
         </div>

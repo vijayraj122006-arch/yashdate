@@ -178,9 +178,9 @@ export const SendMatchLinkModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <span className="flex-1 flex items-center justify-between">
               <span className="flex items-center gap-1.5 font-medium text-emerald-400">
                 <MessageCircle className="w-3.5 h-3.5" />
-                Notify Yash on WhatsApp
+                Notify Yash directly on WhatsApp
               </span>
-              <span className="text-[11px] text-zinc-400 font-mono">+91 94875 48740</span>
+              <span className="text-[11px] text-zinc-400">Instant Alert</span>
             </span>
           </label>
 

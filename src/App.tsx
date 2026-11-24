@@ -7,6 +7,7 @@ import { SentMatchesView } from './components/SentMatchesView';
 import { EditBioView } from './components/EditBioView';
 import { FriendEndorsementModal } from './components/FriendEndorsementModal';
 import { SendMatchLinkModal } from './components/SendMatchLinkModal';
+import { CompatibilityQuizModal } from './components/CompatibilityQuizModal';
 import { ToastContainer } from './components/ToastContainer';
 import { RoleModal } from './components/RoleModal';
 import { AuthOpeningScreen } from './components/AuthOpeningScreen';
@@ -16,6 +17,7 @@ const MainContent: React.FC = () => {
   const { activeTab } = useApp();
   const [isEndorseModalOpen, setIsEndorseModalOpen] = useState(false);
   const [isSendLinkModalOpen, setIsSendLinkModalOpen] = useState(false);
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen app-ambient-bg text-zinc-100 flex flex-col justify-between selection:bg-rose-500 selection:text-white">
@@ -23,6 +25,7 @@ const MainContent: React.FC = () => {
         <Navbar
           onOpenEndorseModal={() => setIsEndorseModalOpen(true)}
           onOpenSendLinkModal={() => setIsSendLinkModalOpen(true)}
+          onOpenQuizModal={() => setIsQuizModalOpen(true)}
         />
 
         <main className="pb-16">
@@ -30,6 +33,7 @@ const MainContent: React.FC = () => {
             <PublicDatingCard
               onOpenEndorseModal={() => setIsEndorseModalOpen(true)}
               onOpenSendLinkModal={() => setIsSendLinkModalOpen(true)}
+              onOpenQuizModal={() => setIsQuizModalOpen(true)}
             />
           )}
 
@@ -60,6 +64,11 @@ const MainContent: React.FC = () => {
       <SendMatchLinkModal
         isOpen={isSendLinkModalOpen}
         onClose={() => setIsSendLinkModalOpen(false)}
+      />
+
+      <CompatibilityQuizModal
+        isOpen={isQuizModalOpen}
+        onClose={() => setIsQuizModalOpen(false)}
       />
 
       <ToastContainer />

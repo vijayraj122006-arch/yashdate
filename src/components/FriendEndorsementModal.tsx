@@ -1,12 +1,30 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { createVouchWhatsAppUrl } from '../utils/whatsappHelper';
-import { X, Heart, MessageCircle } from 'lucide-react';
+import { X, Heart, MessageCircle, Sparkles } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const WINGMAN_PRESETS = [
+  {
+    label: '🟢 Green Flag Vibe',
+    desc: 'Yash is 6ft of pure calm energy. Doesn\'t play games, loves Anuv Jain songs, and will genuinely remember your favorite coffee order.',
+    why: 'He is a certified green flag, emotionally grounded, and has top-tier dry humor.',
+  },
+  {
+    label: '✈️ Future Pilot & Foodie',
+    desc: 'Aspiring pilot with mallu roots and Chennai warmth. Super hilarious, thoughtful, and makes amazing late-night pasta.',
+    why: 'He is 6ft tall, cute and witty, and will literally fly you into the sunset.',
+  },
+  {
+    label: '✨ Authentic & Thoughtful',
+    desc: 'One of the most authentic and kindest guys you\'ll ever meet. Great listener, loves acoustic music, and treats people with true respect.',
+    why: 'Zero drama, loyal, dependable, and genuine husband material.',
+  },
+];
 
 export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { daterProfile, addEndorsement, session } = useApp();
@@ -21,6 +39,11 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
   const [notifyWhatsapp, setNotifyWhatsapp] = useState(true);
 
   if (!isOpen) return null;
+
+  const handleApplyPreset = (preset: typeof WINGMAN_PRESETS[0]) => {
+    setDescription(preset.desc);
+    setWhyYouShouldDateThem(preset.why);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,9 +88,30 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
             </h2>
           </div>
         </div>
-        <p className="text-xs text-zinc-400 mb-4 text-left">
-          Write an honest, genuine description about what he is like in real life.
+        <p className="text-xs text-zinc-400 mb-3 text-left">
+          Write an honest description about him, or use a 1-click wingman pitch generator below!
         </p>
+
+        {/* 1-Click Wingman Pitch Generator */}
+        <div className="mb-4 p-3 rounded-2xl bg-[#181824] border border-rose-500/20 text-left">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-300 mb-2">
+            <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+            <span>1-Click Wingman Pitch Generator</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {WINGMAN_PRESETS.map((p, idx) => (
+              <button
+                key={idx}
+                type="button"
+                data-testid={`preset-wingman-${idx}`}
+                onClick={() => handleApplyPreset(p)}
+                className="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-rose-500/20 text-zinc-300 hover:text-rose-200 border border-white/5 transition cursor-pointer"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-3.5 text-left">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -155,9 +199,9 @@ export const FriendEndorsementModal: React.FC<Props> = ({ isOpen, onClose }) => 
             <span className="flex-1 flex items-center justify-between">
               <span className="flex items-center gap-1.5 font-medium text-emerald-400">
                 <MessageCircle className="w-3.5 h-3.5" />
-                Notify Yash on WhatsApp
+                Notify Yash directly on WhatsApp
               </span>
-              <span className="text-[11px] text-zinc-400 font-mono">+91 94875 48740</span>
+              <span className="text-[11px] text-zinc-400">Instant Alert</span>
             </span>
           </label>
 

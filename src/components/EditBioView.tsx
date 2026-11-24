@@ -46,7 +46,7 @@ export const EditBioView: React.FC = () => {
     photo3: daterProfile.photos[2] || '',
     instagramUrl: daterProfile.socialLinks.find((l) => l.platform === 'instagram')?.url || '',
     linkedinUrl: daterProfile.socialLinks.find((l) => l.platform === 'linkedin')?.url || '',
-    whatsappNumber: daterProfile.whatsappNumber || '+91 94875 48740',
+    whatsappNumber: daterProfile.whatsappNumber || '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -321,7 +321,7 @@ export const EditBioView: React.FC = () => {
             data-testid="input-whatsapp"
             value={formData.whatsappNumber}
             onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-            placeholder="+91 94875 48740"
+            placeholder="e.g. +91XXXXXXXXXX"
             className="w-full px-3 py-2 rounded-xl bg-[#181824] border border-white/10 text-white text-xs outline-none focus:border-rose-500 font-mono transition"
           />
         </div>
